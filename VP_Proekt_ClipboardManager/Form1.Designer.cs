@@ -47,8 +47,12 @@
             this.lblItems = new System.Windows.Forms.Label();
             this.lblStrings = new System.Windows.Forms.Label();
             this.btnSetText = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxText = new System.Windows.Forms.CheckBox();
+            this.checkBoxItems = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // notifyTryIcon
@@ -68,27 +72,27 @@
             this.closeToolStripMenuItem});
             this.contextMenuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(104, 70);
             this.contextMenuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip1_ItemClicked);
             // 
             // showToolStripMenuItem
             // 
             this.showToolStripMenuItem.Name = "showToolStripMenuItem";
-            this.showToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.showToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.showToolStripMenuItem.Text = "Show";
             this.showToolStripMenuItem.Click += new System.EventHandler(this.showToolStripMenuItem_Click);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.hideToolStripMenuItem.Text = "Hide";
             this.hideToolStripMenuItem.Click += new System.EventHandler(this.hideToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -199,12 +203,48 @@
             this.btnSetText.UseVisualStyleBackColor = true;
             this.btnSetText.Click += new System.EventHandler(this.btnSetText_Click);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.checkBoxText);
+            this.groupBox1.Controls.Add(this.checkBoxItems);
+            this.groupBox1.Location = new System.Drawing.Point(317, 194);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(99, 67);
+            this.groupBox1.TabIndex = 18;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Content to copy";
+            // 
+            // checkBoxText
+            // 
+            this.checkBoxText.AutoSize = true;
+            this.checkBoxText.Checked = true;
+            this.checkBoxText.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxText.Location = new System.Drawing.Point(7, 19);
+            this.checkBoxText.Name = "checkBoxText";
+            this.checkBoxText.Size = new System.Drawing.Size(47, 17);
+            this.checkBoxText.TabIndex = 15;
+            this.checkBoxText.Text = "Text";
+            this.checkBoxText.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxItems
+            // 
+            this.checkBoxItems.AutoSize = true;
+            this.checkBoxItems.Checked = true;
+            this.checkBoxItems.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxItems.Location = new System.Drawing.Point(7, 42);
+            this.checkBoxItems.Name = "checkBoxItems";
+            this.checkBoxItems.Size = new System.Drawing.Size(51, 17);
+            this.checkBoxItems.TabIndex = 16;
+            this.checkBoxItems.Text = "Items";
+            this.checkBoxItems.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(444, 435);
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnSetText);
             this.Controls.Add(this.lblStrings);
             this.Controls.Add(this.lblItems);
@@ -222,6 +262,8 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -246,6 +288,9 @@
         private System.Windows.Forms.Label lblItems;
         private System.Windows.Forms.Label lblStrings;
         private System.Windows.Forms.Button btnSetText;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox checkBoxText;
+        private System.Windows.Forms.CheckBox checkBoxItems;
     }
 }
 

@@ -178,7 +178,7 @@ namespace VP_Proekt_ClipboardManager
 
             if (m.Msg == WM_CLIPBOARDUPDATE)
             {
-                if (Clipboard.ContainsFileDropList())
+                if (Clipboard.ContainsFileDropList() && checkBoxItems.Checked)
                 {
                     StringCollection item;
                     item = Clipboard.GetFileDropList();
@@ -190,7 +190,7 @@ namespace VP_Proekt_ClipboardManager
                 }
                 else                                                   // if this else is reached then current clipboard item must be string
                 {
-                    if (Clipboard.ContainsText())                   // add one more check to prevent unexpected behaviour
+                    if (Clipboard.ContainsText() && checkBoxText.Checked)                   // add one more check to prevent unexpected behaviour
                     {
                         string name = Clipboard.GetText();
                         addToContextMenu(name);                     // add current item in cotext menu
