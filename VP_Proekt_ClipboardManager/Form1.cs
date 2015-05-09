@@ -39,8 +39,8 @@ namespace VP_Proekt_ClipboardManager
         //Here ends initialization of fields neceserry for Clipboard Listener
 
         public Form1()
-        {   
-            InitializeComponent();
+        {
+            InitializeComponent(); // InitializeComponent();
             AddClipboardFormatListener(this.Handle);                    // ClipBoard Listener
             
             // add some code to deal with initialization of "List<Object> allitemes"
