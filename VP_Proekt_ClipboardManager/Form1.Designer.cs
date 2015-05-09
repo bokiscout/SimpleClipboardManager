@@ -47,12 +47,30 @@
             this.lblItems = new System.Windows.Forms.Label();
             this.lblStrings = new System.Windows.Forms.Label();
             this.btnSetText = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkBoxText = new System.Windows.Forms.CheckBox();
             this.checkBoxItems = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.Apply = new System.Windows.Forms.Button();
+            this.nudStoredItems = new System.Windows.Forms.NumericUpDown();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rbPositionBotomRight = new System.Windows.Forms.RadioButton();
+            this.rbPositionBotomLeft = new System.Windows.Forms.RadioButton();
+            this.rbPositionTopRight = new System.Windows.Forms.RadioButton();
+            this.rbPositionTopLeft = new System.Windows.Forms.RadioButton();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.rbSortFilesAndFoldersFirst = new System.Windows.Forms.RadioButton();
+            this.rbSortTextFirst = new System.Windows.Forms.RadioButton();
+            this.rbSortByCategory = new System.Windows.Forms.RadioButton();
+            this.rbSortByTime = new System.Windows.Forms.RadioButton();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudStoredItems)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // notifyTryIcon
@@ -102,7 +120,7 @@
             this.stripMenuTitleToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(444, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(710, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -203,17 +221,6 @@
             this.btnSetText.UseVisualStyleBackColor = true;
             this.btnSetText.Click += new System.EventHandler(this.btnSetText_Click);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.checkBoxText);
-            this.groupBox1.Controls.Add(this.checkBoxItems);
-            this.groupBox1.Location = new System.Drawing.Point(317, 194);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(99, 67);
-            this.groupBox1.TabIndex = 18;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Content to copy";
-            // 
             // checkBoxText
             // 
             this.checkBoxText.AutoSize = true;
@@ -233,17 +240,193 @@
             this.checkBoxItems.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxItems.Location = new System.Drawing.Point(7, 42);
             this.checkBoxItems.Name = "checkBoxItems";
-            this.checkBoxItems.Size = new System.Drawing.Size(51, 17);
+            this.checkBoxItems.Size = new System.Drawing.Size(105, 17);
             this.checkBoxItems.TabIndex = 16;
-            this.checkBoxItems.Text = "Items";
+            this.checkBoxItems.Text = "Files and Folders";
             this.checkBoxItems.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.checkBoxText);
+            this.groupBox1.Controls.Add(this.checkBoxItems);
+            this.groupBox1.Location = new System.Drawing.Point(317, 200);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(115, 67);
+            this.groupBox1.TabIndex = 17;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Content to copy";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(314, 283);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(125, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "No. of elements in history";
+            // 
+            // Apply
+            // 
+            this.Apply.Location = new System.Drawing.Point(316, 354);
+            this.Apply.Name = "Apply";
+            this.Apply.Size = new System.Drawing.Size(75, 23);
+            this.Apply.TabIndex = 20;
+            this.Apply.Text = "Apply";
+            this.Apply.UseVisualStyleBackColor = true;
+            this.Apply.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // nudStoredItems
+            // 
+            this.nudStoredItems.Location = new System.Drawing.Point(316, 302);
+            this.nudStoredItems.Name = "nudStoredItems";
+            this.nudStoredItems.Size = new System.Drawing.Size(116, 20);
+            this.nudStoredItems.TabIndex = 21;
+            this.nudStoredItems.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.nudStoredItems.ValueChanged += new System.EventHandler(this.nudStoredItems_ValueChanged);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.rbPositionBotomRight);
+            this.groupBox2.Controls.Add(this.rbPositionBotomLeft);
+            this.groupBox2.Controls.Add(this.rbPositionTopRight);
+            this.groupBox2.Controls.Add(this.rbPositionTopLeft);
+            this.groupBox2.Location = new System.Drawing.Point(438, 55);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(200, 113);
+            this.groupBox2.TabIndex = 22;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "ChosePosition of ControlPanel";
+            // 
+            // rbPositionBotomRight
+            // 
+            this.rbPositionBotomRight.AutoSize = true;
+            this.rbPositionBotomRight.Location = new System.Drawing.Point(6, 88);
+            this.rbPositionBotomRight.Name = "rbPositionBotomRight";
+            this.rbPositionBotomRight.Size = new System.Drawing.Size(117, 17);
+            this.rbPositionBotomRight.TabIndex = 3;
+            this.rbPositionBotomRight.Text = "Botom Right Corner";
+            this.rbPositionBotomRight.UseVisualStyleBackColor = true;
+            this.rbPositionBotomRight.CheckedChanged += new System.EventHandler(this.rbPositionBotomRight_CheckedChanged);
+            // 
+            // rbPositionBotomLeft
+            // 
+            this.rbPositionBotomLeft.Location = new System.Drawing.Point(7, 65);
+            this.rbPositionBotomLeft.Name = "rbPositionBotomLeft";
+            this.rbPositionBotomLeft.Size = new System.Drawing.Size(85, 17);
+            this.rbPositionBotomLeft.TabIndex = 2;
+            this.rbPositionBotomLeft.Text = "Botom Left Corner";
+            this.rbPositionBotomLeft.UseVisualStyleBackColor = true;
+            this.rbPositionBotomLeft.CheckedChanged += new System.EventHandler(this.rbPositionBotomLeft_CheckedChanged);
+            // 
+            // rbPositionTopRight
+            // 
+            this.rbPositionTopRight.Checked = true;
+            this.rbPositionTopRight.Location = new System.Drawing.Point(7, 43);
+            this.rbPositionTopRight.Name = "rbPositionTopRight";
+            this.rbPositionTopRight.Size = new System.Drawing.Size(85, 17);
+            this.rbPositionTopRight.TabIndex = 1;
+            this.rbPositionTopRight.TabStop = true;
+            this.rbPositionTopRight.Text = "Top Right Corner";
+            this.rbPositionTopRight.UseVisualStyleBackColor = true;
+            this.rbPositionTopRight.CheckedChanged += new System.EventHandler(this.rbPositionTopRight_CheckedChanged);
+            // 
+            // rbPositionTopLeft
+            // 
+            this.rbPositionTopLeft.AutoSize = true;
+            this.rbPositionTopLeft.Location = new System.Drawing.Point(7, 20);
+            this.rbPositionTopLeft.Name = "rbPositionTopLeft";
+            this.rbPositionTopLeft.Size = new System.Drawing.Size(99, 17);
+            this.rbPositionTopLeft.TabIndex = 0;
+            this.rbPositionTopLeft.Text = "Top Left Corner";
+            this.rbPositionTopLeft.UseVisualStyleBackColor = true;
+            this.rbPositionTopLeft.CheckedChanged += new System.EventHandler(this.rbPositionTopLeft_CheckedChanged);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.groupBox4);
+            this.groupBox3.Controls.Add(this.rbSortByCategory);
+            this.groupBox3.Controls.Add(this.rbSortByTime);
+            this.groupBox3.Location = new System.Drawing.Point(445, 200);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(246, 195);
+            this.groupBox3.TabIndex = 23;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Sort Items";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.rbSortFilesAndFoldersFirst);
+            this.groupBox4.Controls.Add(this.rbSortTextFirst);
+            this.groupBox4.Location = new System.Drawing.Point(23, 66);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(217, 82);
+            this.groupBox4.TabIndex = 2;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "groupBox4";
+            // 
+            // rbSortFilesAndFoldersFirst
+            // 
+            this.rbSortFilesAndFoldersFirst.AutoSize = true;
+            this.rbSortFilesAndFoldersFirst.Enabled = false;
+            this.rbSortFilesAndFoldersFirst.Location = new System.Drawing.Point(7, 36);
+            this.rbSortFilesAndFoldersFirst.Name = "rbSortFilesAndFoldersFirst";
+            this.rbSortFilesAndFoldersFirst.Size = new System.Drawing.Size(173, 17);
+            this.rbSortFilesAndFoldersFirst.TabIndex = 1;
+            this.rbSortFilesAndFoldersFirst.TabStop = true;
+            this.rbSortFilesAndFoldersFirst.Text = "First Files and Folders, then text";
+            this.rbSortFilesAndFoldersFirst.UseVisualStyleBackColor = true;
+            // 
+            // rbSortTextFirst
+            // 
+            this.rbSortTextFirst.AutoSize = true;
+            this.rbSortTextFirst.Enabled = false;
+            this.rbSortTextFirst.Location = new System.Drawing.Point(7, 17);
+            this.rbSortTextFirst.Name = "rbSortTextFirst";
+            this.rbSortTextFirst.Size = new System.Drawing.Size(173, 17);
+            this.rbSortTextFirst.TabIndex = 0;
+            this.rbSortTextFirst.TabStop = true;
+            this.rbSortTextFirst.Text = "First text, then Files and Folders";
+            this.rbSortTextFirst.UseVisualStyleBackColor = true;
+            // 
+            // rbSortByCategory
+            // 
+            this.rbSortByCategory.AutoSize = true;
+            this.rbSortByCategory.Location = new System.Drawing.Point(7, 42);
+            this.rbSortByCategory.Name = "rbSortByCategory";
+            this.rbSortByCategory.Size = new System.Drawing.Size(82, 17);
+            this.rbSortByCategory.TabIndex = 1;
+            this.rbSortByCategory.Text = "By Category";
+            this.rbSortByCategory.UseVisualStyleBackColor = true;
+            this.rbSortByCategory.CheckedChanged += new System.EventHandler(this.rbSortByCategory_CheckedChanged);
+            // 
+            // rbSortByTime
+            // 
+            this.rbSortByTime.AutoSize = true;
+            this.rbSortByTime.Checked = true;
+            this.rbSortByTime.Location = new System.Drawing.Point(7, 19);
+            this.rbSortByTime.Name = "rbSortByTime";
+            this.rbSortByTime.Size = new System.Drawing.Size(59, 17);
+            this.rbSortByTime.TabIndex = 0;
+            this.rbSortByTime.TabStop = true;
+            this.rbSortByTime.Text = "By time";
+            this.rbSortByTime.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(444, 435);
+            this.ClientSize = new System.Drawing.Size(710, 435);
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.nudStoredItems);
+            this.Controls.Add(this.Apply);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnSetText);
             this.Controls.Add(this.lblStrings);
@@ -254,16 +437,26 @@
             this.Controls.Add(this.btnGet);
             this.Controls.Add(this.btnSetItems);
             this.Controls.Add(this.menuStrip1);
+            this.Location = new System.Drawing.Point(1000, 1000);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.ShowInTaskbar = false;
-            this.Text = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Text = "Simple Clipboard Manager";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing_1);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.contextMenuStrip1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudStoredItems)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -288,9 +481,23 @@
         private System.Windows.Forms.Label lblItems;
         private System.Windows.Forms.Label lblStrings;
         private System.Windows.Forms.Button btnSetText;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox checkBoxText;
         private System.Windows.Forms.CheckBox checkBoxItems;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button Apply;
+        private System.Windows.Forms.NumericUpDown nudStoredItems;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton rbPositionBotomRight;
+        private System.Windows.Forms.RadioButton rbPositionBotomLeft;
+        private System.Windows.Forms.RadioButton rbPositionTopRight;
+        private System.Windows.Forms.RadioButton rbPositionTopLeft;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.RadioButton rbSortFilesAndFoldersFirst;
+        private System.Windows.Forms.RadioButton rbSortTextFirst;
+        private System.Windows.Forms.RadioButton rbSortByCategory;
+        private System.Windows.Forms.RadioButton rbSortByTime;
     }
 }
 

@@ -13,10 +13,14 @@ using System.Windows.Forms;
 
 namespace VP_Proekt_ClipboardManager
 {
+    
     public partial class Form1 : Form
     {
         public List<Object> allitems = new List<Object>();      // declare and initialize list of "Object", each item is something copied in clipboard but stored as "Object"... weill need casting for later use
-
+        public int noOfItems;                                   // variable to store maximum number of itemst to be stored
+        int width;                                              // width of the screen, used to determinate proper position of the form
+        int height;                                             // height of the screen, used to determinate proper position of the form
+        //golemina na listata
         //Here start initialization of fields neceserry for Clipboard Listener
         // <summary>
         // Places the given window in the system-maintained clipboard format listener list.
@@ -39,14 +43,16 @@ namespace VP_Proekt_ClipboardManager
         //Here ends initialization of fields neceserry for Clipboard Listener
 
         public Form1()
-        {
-            InitializeComponent(); // InitializeComponent();
+        {   
+            InitializeComponent();
             AddClipboardFormatListener(this.Handle);                    // ClipBoard Listener
             
             // add some code to deal with initialization of "List<Object> allitemes"
             //
             //
             // code for dealing with initialization of "List<Object> allitemes" ends here
+            noOfItems = (int)nudStoredItems.Value;              // intilize number of items acorting to value in form numeric updown
+            SetPosition();                                    // call methot to initialize width and height values representing screen size
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)                // method to close form when clicked "Close" button from context menu
@@ -90,6 +96,7 @@ namespace VP_Proekt_ClipboardManager
         {
             Show();
             WindowState = FormWindowState.Normal;
+            this.SetPosition();
         }
 
         // old code, used only for debuging
@@ -214,9 +221,80 @@ namespace VP_Proekt_ClipboardManager
                 {
                     allitems.RemoveAt(i);
                 }
-            }                                                           // if there were any duplicates now they are gone
-            allitems.Add(name);                                         // add provided string "name" to list of clipboard items
+            } 
+                                                          // if there were any duplicates now they are gone
+           
+            if (allitems.Count > noOfItems)             // if we have maxiumim number of elements, delete odest one and add new one
+            {
+                for (int i = 0; i < allitems.Count - noOfItems+1; i++)
+                allitems.RemoveAt(0);
+                allitems.Add(name);
+            }
+            else
+                allitems.Add(name);                                         // add provided string "name" to list of clipboard items
+
+            sortAllItems();                                             // call method that will eventualy sort items
+            
             generateContextMenu();                                      // call method to regenerate new context menu containing new item
+        }
+
+        private void sortAllItems()
+        {
+            if (rbSortByCategory.Checked == true)
+            {
+                if (rbSortTextFirst.Checked == true)
+                {
+                    SortAllItemsTextFirst();
+                }
+                else if (rbSortFilesAndFoldersFirst.Checked == true)
+                {
+                    SortAllItemsFilesAndFoldersFirst();
+                }
+            }
+        }
+
+        private void SortAllItemsFilesAndFoldersFirst() // *******************
+        {
+            List<object> newlist = new List<object>();      // generate empty list
+            for (int i = 0; i < allitems.Count; i++)
+            {
+                if (allitems[i] is StringCollection)
+                {
+                    newlist.Add(allitems[i]);
+                }
+            }       // all files and folders are added
+
+            for (int i = 0; i < allitems.Count; i++)        // now add text
+            {
+                if (!(allitems[i] is StringCollection))
+                {
+                    newlist.Add(allitems[i]);
+                }
+            }       // text has been added
+
+            allitems = newlist;     // asign new (temporary) list to old one
+        }
+
+        private void SortAllItemsTextFirst() //******************
+        {
+            List<object> newlist = new List<object>();      // generate empty list
+            for (int i = 0; i < allitems.Count; i++)
+            {
+                if (!(allitems[i] is StringCollection))    // add text to the list
+                {
+                    newlist.Add(allitems[i]);
+                }
+            }       // all text items has been added
+
+            for (int i = 0; i < allitems.Count; i++)        // now add Files and Folders
+            {
+                if (allitems[i] is StringCollection)
+                {
+                    newlist.Add(allitems[i]);
+                }
+            }       // Files and Folders has been added
+
+            allitems = newlist;     // asign new (temporary) list to old one
         }
 
         private void generateContextMenu()                                                      // method to generate menu
@@ -257,9 +335,8 @@ namespace VP_Proekt_ClipboardManager
                         lbItems.Items.Add(name);
                         contextMenuStrip1.Items.Add(name);
                     }
-
-                    // **** pomogni mi tuka da go zemam strinot od lokacijata na elementot
                 }
+
                 else
                 {
                     string name = allitems[i].ToString();
@@ -295,7 +372,14 @@ namespace VP_Proekt_ClipboardManager
                 }
             }                                                                       // if there are duplicates now they are gone
 
-            allitems.Add(item);                                                     // add current "StringCoelction" to []allitems
+            if (allitems.Count > noOfItems)             //proverka za odrzuvanje na nizata na odredenata golemina
+            {
+                for (int i = 0; i < allitems.Count - noOfItems+1; i++)
+                    allitems.RemoveAt(0);
+                allitems.Add(item);
+            }
+            else
+                allitems.Add(item);                                                     // add current "StringCoelction" to []allitems
             generateContextMenu();                                                  // regenerate the context menu
         }
 
@@ -360,6 +444,82 @@ namespace VP_Proekt_ClipboardManager
             {
                 return false;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)      // click aply button
+        {   
+            // let's use numeric up down instead of textbox
+            // noOfItems = Convert.ToInt16(textBoxNoOfCopiesToStore.Text)-1;
+            noOfItems = (int)nudStoredItems.Value;
+            generateContextMenu();
+        }
+
+        private void Form1_FormClosing_1(object sender, FormClosingEventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
+        private void SetPosition()          // method to calculate proper position of the form acording to screen size (resolution)
+        {
+            Rectangle resolution = Screen.PrimaryScreen.Bounds;
+            width = resolution.Width;
+            height = resolution.Height;
+
+            if (rbPositionBotomLeft.Checked == true)
+            {
+                this.SetDesktopLocation(0, height - 600);
+            }
+            else if (rbPositionBotomRight.Checked == true)
+            {
+                this.SetDesktopLocation(width - 350, height - 550);
+            }
+            else if (rbPositionTopLeft.Checked == true)
+            {
+                this.SetDesktopLocation(0, 0);
+            }
+            else if (rbPositionTopRight.Checked == true)
+            {
+                this.SetDesktopLocation(width - 150, 0);
+            }
+        }
+
+        private void rbSortByCategory_CheckedChanged(object sender, EventArgs e)        // when sort by category is checked then change status to enabled of all of the subategories
+        {
+            if (rbSortByCategory.Checked == true)
+            {
+                rbSortTextFirst.Enabled = true;
+                rbSortFilesAndFoldersFirst.Enabled = true;
+            }
+            else
+            {
+                rbSortTextFirst.Enabled = false;
+                rbSortFilesAndFoldersFirst.Enabled = false;
+            }
+        }
+
+        private void nudStoredItems_ValueChanged(object sender, EventArgs e)
+        {
+            noOfItems = (int)nudStoredItems.Value;
+        }
+
+        private void rbPositionTopLeft_CheckedChanged(object sender, EventArgs e)
+        {
+            //this.SetPosition();
+        }
+
+        private void rbPositionTopRight_CheckedChanged(object sender, EventArgs e)
+        {
+            //this.SetPosition();
+        }
+
+        private void rbPositionBotomLeft_CheckedChanged(object sender, EventArgs e)
+        {
+           // this.SetPosition();
+        }
+
+        private void rbPositionBotomRight_CheckedChanged(object sender, EventArgs e)
+        {
+         //   this.SetPosition();
         }
 
 
