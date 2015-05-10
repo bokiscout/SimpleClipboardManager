@@ -7,21 +7,24 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 namespace VP_Proekt_ClipboardManager
-{
     
+{
     public partial class Form1 : Form
-    {
+    {   
+        // [Serializable]
         public List<Object> allitems = new List<Object>();      // declare and initialize list of "Object", each item is something copied in clipboard but stored as "Object"... weill need casting for later use
         public int noOfItems;                                   // variable to store maximum number of itemst to be stored
         int width;                                              // width of the screen, used to determinate proper position of the form
         int height;                                             // height of the screen, used to determinate proper position of the form
-        //golemina na listata
-        //Here start initialization of fields neceserry for Clipboard Listener
+        bool closeApp;
+                                         // variable to store if app should be closed od red X btn click or not
+
+        // Here start initialization of fields neceserry for Clipboard Listener
         // <summary>
         // Places the given window in the system-maintained clipboard format listener list.
         // </summary>
@@ -47,34 +50,249 @@ namespace VP_Proekt_ClipboardManager
             InitializeComponent();
             AddClipboardFormatListener(this.Handle);                    // ClipBoard Listener
             
+                
+                string path = @"C:\Users\Public\clipboard";
+                if (!System.IO.File.Exists(@"C:\Users\Public\clipboard\lines.txt"))
+                {                    
+                    path = @"C:\Users\Public\clipboard\lines.txt";
+                    File.Create(path);                    
+                }                
+           
+            
             // add some code to deal with initialization of "List<Object> allitemes"
             //
             //
             // code for dealing with initialization of "List<Object> allitemes" ends here
             noOfItems = (int)nudStoredItems.Value;              // intilize number of items acorting to value in form numeric updown
             SetPosition();                                    // call methot to initialize width and height values representing screen size
+            closeApp = false;
+
+            try{
+                    fillForm();                                 // try to read config file   // if config file not found, loead form defaults
+                }
+           catch (FileNotFoundException)
+                {
+                    return;
+                }
+
+            if (checkBoxRememberOnClose.Checked == true)
+            {
+                try
+                {                    
+                        TryGet();                    
+                  // fillHistory();
+                   
+                }
+                catch (FileLoadException)
+                {
+                    return;                         // will have empty list
+                }
+            }
         }
 
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)                // method to close form when clicked "Close" button from context menu
+        private void TrySer()
         {
-            // remove from listener then close form
-            //Form1_FormClosing.()
-            this.Close();
+            try
+            {
+                using (Stream stream = File.Open(@"C:\Users\Public\clipboard\clipboard.bin", FileMode.Create))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    bin.Serialize(stream, allitems);
+                }
+            }
+            catch (Exception e) { }
         }
-
-        private void stripMenuReadClipboard_Click(object sender, EventArgs e)                // probably old code... should be removed
+        private void TryGet()
         {
+            try
+            {
+                using (Stream stream = File.Open(@"C:\Users\Public\clipboard\clipboard.bin", FileMode.Open))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    List<Object> pom = (List<Object>)bin.Deserialize(stream);
+                    if (pom != null)
+                    {
+                        allitems = pom;
+                        generateContextMenu();
+                    }
+                }
+            }
+            catch (Exception e) { }
         }
 
-        private void stripMenuPaste_Click(object sender, EventArgs e)                    // old code... used onlky for debuging 
+        //private void fillHistory()
+        //{
+        //    string line;
+        //    System.IO.StreamReader reader;
+        //    reader = new System.IO.StreamReader(@"C:\Users\Public\clipboard\history.txt");
+
+        //    line = reader.ReadLine();
+        //    while (line != null)
+        //    {
+        //        if (line != "0")
+        //        {
+        //            allitems.Add(line);
+        //        }
+        //        line = reader.ReadLine();
+        //    }
+
+        //    reader.Close();
+        //    generateContextMenu();
+        //}
+
+        private void fillForm()
         {
-            IDataObject idata = Clipboard.GetDataObject();
-            //textBox2.Text = (String)idata.GetData(DataFormats.Text);
-            //if (Clipboard.ContainsAudio())
-            //    textBox2.Text = (string)Clipboard.GetData(DataFormats.WaveAudio);
-            //str = idata.GetFormats();
+            try
+            {
+                string line;
+                System.IO.StreamReader reader;
+                reader = new System.IO.StreamReader(@"C:\Users\Public\clipboard\lines.txt");
+
+                for (int i = 0; i < 12; i++)
+                {
+                    line = reader.ReadLine();           // if I read empty line, then no config is stored, load default
+
+                    switch (i)
+                    {
+                        case 0:
+                            if (line == "1")
+                            {
+                                rbPositionTopLeft.Checked = true;
+                            }
+                            else
+                            {
+                                rbPositionTopLeft.Checked = false;
+                            }
+                            break;
+                        case 1:
+                            if (line == "1")
+                            {
+                                rbPositionTopRight.Checked = true;
+                            }
+                            else
+                            {
+                                rbPositionTopRight.Checked = false;
+                            }
+                            break;
+                        case 2:
+                            if (line == "1")
+                            {
+                                rbPositionBotomLeft.Checked = true;
+                            }
+                            else
+                            {
+                                rbPositionBotomLeft.Checked = false;
+                            }
+                            break;
+                        case 3:
+                            if (line == "1")
+                            {
+                                rbPositionBotomRight.Checked = true;
+                            }
+                            else
+                            {
+                                rbPositionBotomRight.Checked = false;
+                            }
+                            break;
+                        case 4:
+                            if (line == "1")
+                            {
+                                rbSortByTime.Checked = true;
+                            }
+                            else
+                            {
+                                rbSortByTime.Checked = false;
+                            }
+                            break;
+                        case 5:
+                            if (line == "1")
+                            {
+                                rbSortByCategory.Checked = true;
+                            }
+                            else
+                            {
+                                rbSortByCategory.Checked = false;
+                            }
+                            break;
+                        case 6:
+                            if (line == "1")
+                            {
+                                rbSortTextFirst.Checked = true;
+                            }
+                            else
+                            {
+                                rbSortTextFirst.Checked = false;
+                            }
+                            break;
+                        case 7:
+                            if (line == "1")
+                            {
+                                rbSortFilesAndFoldersFirst.Checked = true;
+                            }
+                            else
+                            {
+                                rbSortFilesAndFoldersFirst.Checked = false;
+                            }
+                            break;
+                        case 8:
+                            if (line == "1")
+                            {
+                                checkBoxText.Checked = true;
+                            }
+                            else
+                            {
+                                checkBoxText.Checked = false;
+                            }
+                            break;
+                        case 9:
+                            if (line == "1")
+                            {
+                                checkBoxItems.Checked = true;
+                            }
+                            else
+                            {
+                                checkBoxItems.Checked = false;
+                            }
+                            break;
+                        case 10:
+                            nudStoredItems.Value = Int32.Parse(line);
+                            break;
+                        case 11:
+                            if (line == "1")
+                            {
+                                checkBoxRememberOnClose.Checked = true;
+                            }
+                            else
+                            {
+                                checkBoxRememberOnClose.Checked = false;
+                            }
+                            break;
+
+                    }
+
+                }
+                reader.Close();     // close the stream
+                this.WindowState = FormWindowState.Minimized;
+            }
+            catch (Exception e) { }
+
         }
 
+        private void stripMenuReadClipboard_Click(object sender, EventArgs e)                // metdod to close app from stripMenu
+        {
+            closeApp = true;
+            this.Close(); 
+        }
+
+        private void stripMenuPaste_Click(object sender, EventArgs e)                    // clear history
+        {
+            for (int i = 0; i < allitems.Count;)                                    // notice that "i" is not incrementig
+            {
+                allitems.RemoveAt(0);
+            }
+
+            generateContextMenu();
+        }
 
         //Setira item na Clipboard
         private void btnSetItems_Click(object sender, EventArgs e)                                   // old code... used for debuging
@@ -94,9 +312,10 @@ namespace VP_Proekt_ClipboardManager
 
         private void notifyTryIcon_MouseDoubleClick(object sender, MouseEventArgs e)                 // restore hiden form (hiden = palced in system try)
         {
+            this.SetPosition();
             Show();
             WindowState = FormWindowState.Normal;
-            this.SetPosition();
+           // this.SetPosition();
         }
 
         // old code, used only for debuging
@@ -253,7 +472,7 @@ namespace VP_Proekt_ClipboardManager
             }
         }
 
-        private void SortAllItemsFilesAndFoldersFirst() // *******************
+        private void SortAllItemsFilesAndFoldersFirst() //
         {
             List<object> newlist = new List<object>();      // generate empty list
             for (int i = 0; i < allitems.Count; i++)
@@ -379,14 +598,174 @@ namespace VP_Proekt_ClipboardManager
                 allitems.Add(item);
             }
             else
-                allitems.Add(item);                                                     // add current "StringCoelction" to []allitems
+                allitems.Add(item);                                                    // add current "StringCoelction" to []allitems
+
+            sortAllItems();
             generateContextMenu();                                                  // regenerate the context menu
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)       // method to remove current lsitener from the .dll providith the same feture
-                                                                                    // should be called before closing (exiting / terminating) the app
+        private void Form1_FormClosing_1(object sender, FormClosingEventArgs e)             // method to handle closing of app
+                                                                                            // prevent closing from red X button, but allow to close from context menu
         {
-            RemoveClipboardFormatListener(this.Handle);
+            if (closeApp == true || e.CloseReason != CloseReason.UserClosing)
+            {
+                RemoveClipboardFormatListener(this.Handle);
+                mySerialization();
+                if (checkBoxRememberOnClose.Checked == true)
+                {
+                   // historySerialization();
+                    TrySer();
+                }
+                return;
+               
+            }
+            e.Cancel = true;
+            Hide();
+        }
+
+        //private void historySerialization()
+        //{
+        //   int size = allitems.Count;
+        //   string[] tmp = new string[size];
+        //    for (int i = 0; i < allitems.Count; i++)
+        //    {
+        //        if (!(allitems[i] is StringCollection))
+        //        {
+        //            tmp[i] = allitems[i].ToString();
+        //        }
+        //        else
+        //        {
+        //            tmp[i] = "0";
+        //        }
+        //    }
+
+        //    System.IO.File.WriteAllLines(@"C:\Users\Public\clipboard\history.txt", tmp);
+        //}
+
+        private void mySerialization()
+        {
+            string[] tmp = new string[13];
+
+            bool checktl = rbPositionTopLeft.Checked;
+            if(checktl)
+            {
+                tmp[0] = "1";
+            }
+            else
+            {
+                tmp[0] = "0";
+            }
+
+            bool checktr = rbPositionTopRight.Checked;
+            if (checktr)
+            {
+                tmp[1] = "1";
+            }
+            else
+            {
+                tmp[1] = "0";
+            }
+
+            bool checkbl = rbPositionBotomLeft.Checked;
+            if (checkbl)
+            {
+                tmp[2] = "1";
+            }
+            else
+            {
+                tmp[2] = "0";
+            }
+
+            bool checkbr = rbPositionBotomRight.Checked;
+            if (checkbr)
+            {
+                tmp[3] = "1";
+            }
+            else
+            {
+                tmp[3] = "0";
+            }
+
+            bool checkByItems = rbSortByTime.Checked;
+            if (checkByItems)
+            {
+                tmp[4] = "1";
+            }
+            else
+            {
+                tmp[4] = "0";
+            }
+
+            bool checkByCategory = rbSortByCategory.Checked;
+            if (checkByCategory)
+            {
+                tmp[5] = "1";
+            }
+            else
+            {
+                tmp[5] = "0";
+            }
+
+            bool checkTextFirst = rbSortTextFirst.Checked;
+            if (checkTextFirst)
+            {
+                tmp[6] = "1";
+            }
+            else
+            {
+                tmp[6] = "0";
+            }
+
+            bool checkFilesFirst = rbSortFilesAndFoldersFirst.Checked;
+            if (checkFilesFirst)
+            {
+                tmp[7] = "1";
+            }
+            else
+            {
+                tmp[7] = "0";
+            }
+
+            bool checkText = checkBoxText.Checked;
+            if (checkText)
+            {
+                tmp[8] = "1";
+            }
+            else
+            {
+                tmp[8] = "0";
+            }
+
+            bool checkFiles = checkBoxItems.Checked;
+            if (checkFiles)
+            {
+                tmp[9] = "1";
+            }
+            else
+            {
+                tmp[9] = "0";
+            }
+
+            int nitems = (int)nudStoredItems.Value;
+            tmp[10] = nitems.ToString();
+
+            bool checkHistory = checkBoxRememberOnClose.Checked;
+            if (checkHistory)
+            {
+                tmp[11] = "1";
+            }
+            else
+            {
+                tmp[11] = "0";
+            }
+
+            System.IO.File.WriteAllLines(@"C:\Users\Public\clipboard\lines.txt", tmp);
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)                // method to close form when clicked "Close" button from context menu
+        {
+            closeApp = true;
+            this.Close();                                                                   // call "Form1_FormClosing_1()"
         }
 
         private void btnSetText_Click(object sender, EventArgs e)           // old code used for debuging
@@ -402,6 +781,7 @@ namespace VP_Proekt_ClipboardManager
         {
             Show();
             WindowState = FormWindowState.Normal;
+            this.SetPosition();
         }
 
         private void hideToolStripMenuItem_Click(object sender, EventArgs e)        // method to hide form when "Hide" from context_menu is clicked
@@ -412,6 +792,11 @@ namespace VP_Proekt_ClipboardManager
         private void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)   // methot to be executed when item in context menu is being clicked
                                                                                                      // by default it set's the data represented by clicked item back to clipboard
         {
+            if (e.ClickedItem.Name == "showToolStripMenuItem" || e.ClickedItem.Name == "hideToolStripMenuItem" || e.ClickedItem.Name == "closeToolStripMenuItem")          // do not take action when Close, Show or Hide is pressed
+            {
+                return;
+            }
+
             bool item_found = false;
             string name = e.ClickedItem.ToString();                                                   // get the text that is displayend on top of clicked item
             
@@ -454,10 +839,7 @@ namespace VP_Proekt_ClipboardManager
             generateContextMenu();
         }
 
-        private void Form1_FormClosing_1(object sender, FormClosingEventArgs e)
-        {
-            WindowState = FormWindowState.Minimized;
-        }
+   
 
         private void SetPosition()          // method to calculate proper position of the form acording to screen size (resolution)
         {
@@ -467,11 +849,11 @@ namespace VP_Proekt_ClipboardManager
 
             if (rbPositionBotomLeft.Checked == true)
             {
-                this.SetDesktopLocation(0, height - 600);
+                this.SetDesktopLocation(0, height - 510);
             }
             else if (rbPositionBotomRight.Checked == true)
             {
-                this.SetDesktopLocation(width - 350, height - 550);
+                this.SetDesktopLocation(width - 590, height - 510);
             }
             else if (rbPositionTopLeft.Checked == true)
             {
@@ -479,7 +861,7 @@ namespace VP_Proekt_ClipboardManager
             }
             else if (rbPositionTopRight.Checked == true)
             {
-                this.SetDesktopLocation(width - 150, 0);
+                this.SetDesktopLocation(width - 590, 0);
             }
         }
 
@@ -504,25 +886,64 @@ namespace VP_Proekt_ClipboardManager
 
         private void rbPositionTopLeft_CheckedChanged(object sender, EventArgs e)
         {
-            //this.SetPosition();
+            this.SetPosition();
         }
 
         private void rbPositionTopRight_CheckedChanged(object sender, EventArgs e)
         {
-            //this.SetPosition();
+            this.SetPosition();
         }
 
         private void rbPositionBotomLeft_CheckedChanged(object sender, EventArgs e)
         {
-           // this.SetPosition();
+           this.SetPosition();
         }
 
         private void rbPositionBotomRight_CheckedChanged(object sender, EventArgs e)
         {
-         //   this.SetPosition();
+            this.SetPosition();
+        }
+
+        private void notifyTryIcon_MouseClick(object sender, MouseEventArgs e)              // use left click to show context menu isntead of right click
+        {
+           // Point mouseLocation = Cursor.Position;
+            // contextMenuStrip1.Show(mouseLocation);
+            // otifyTryIcon.MouseClick += MouseButtons.Right;
+           // ContextMenuStrip.Show(notifyTryIcon.ContextMenuStrip, 10, 12);
+            // notifyTryIcon_MouseDoubleClick(null, null);
+            MouseButtons button = MouseButtons.Right;
+
+            if (e.Button == MouseButtons.Left){
+                // this.notifyTryIcon.ContextMenuStrip.Show();
+            }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            //System.IO.Directory.Delete(@"C:\Users\Public\clipboard");
+            allitems.Clear();            
+            string path = @"C:\Users\Public\clipboard\history.txt";
+            System.IO.File.WriteAllText(path, "");
+            for(int i = contextMenuStrip1.Items.Count-1 ;  i >= 3 ;i--)
+            {
+                contextMenuStrip1.Items.RemoveAt(i);
+            }
+            lbItems.Items.Clear();
+            lbStrngs.Items.Clear();
+            try
+            {
+                using (Stream stream = File.Open(@"C:\Users\Public\clipboard\clipboard.bin", FileMode.Create))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    bin.Serialize(stream, allitems);
+                }
+            }
+            catch (Exception ex) { }
         }
 
 
+
+        
 
     }
 }
