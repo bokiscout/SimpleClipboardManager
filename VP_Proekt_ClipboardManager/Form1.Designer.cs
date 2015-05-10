@@ -37,21 +37,16 @@
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.stripMenuTitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stripMenuReadClipboard = new System.Windows.Forms.ToolStripMenuItem();
-            this.stripMenuPaste = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnSetItems = new System.Windows.Forms.Button();
-            this.btnGet = new System.Windows.Forms.Button();
+            this.stripMenuClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.stripMenuClear = new System.Windows.Forms.ToolStripMenuItem();
             this.lbItems = new System.Windows.Forms.ListBox();
-            this.btnReset = new System.Windows.Forms.Button();
             this.lbStrngs = new System.Windows.Forms.ListBox();
             this.lblItems = new System.Windows.Forms.Label();
             this.lblStrings = new System.Windows.Forms.Label();
-            this.btnSetText = new System.Windows.Forms.Button();
             this.checkBoxText = new System.Windows.Forms.CheckBox();
             this.checkBoxItems = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.Apply = new System.Windows.Forms.Button();
             this.nudStoredItems = new System.Windows.Forms.NumericUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.rbPositionBotomRight = new System.Windows.Forms.RadioButton();
@@ -64,6 +59,8 @@
             this.rbSortTextFirst = new System.Windows.Forms.RadioButton();
             this.rbSortByCategory = new System.Windows.Forms.RadioButton();
             this.rbSortByTime = new System.Windows.Forms.RadioButton();
+            this.checkBoxRememberOnClose = new System.Windows.Forms.CheckBox();
+            this.btnClear = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -79,6 +76,7 @@
             this.notifyTryIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyTryIcon.Icon")));
             this.notifyTryIcon.Text = "notifyIcon1";
             this.notifyTryIcon.Visible = true;
+            this.notifyTryIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyTryIcon_MouseClick);
             this.notifyTryIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyTryIcon_MouseDoubleClick);
             // 
             // contextMenuStrip1
@@ -120,75 +118,45 @@
             this.stripMenuTitleToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(710, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(572, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // stripMenuTitleToolStripMenuItem
             // 
             this.stripMenuTitleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.stripMenuReadClipboard,
-            this.stripMenuPaste});
+            this.stripMenuClose,
+            this.stripMenuClear});
             this.stripMenuTitleToolStripMenuItem.Name = "stripMenuTitleToolStripMenuItem";
-            this.stripMenuTitleToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
-            this.stripMenuTitleToolStripMenuItem.Text = "StripMenuTitle";
+            this.stripMenuTitleToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.stripMenuTitleToolStripMenuItem.Text = "File";
             // 
-            // stripMenuReadClipboard
+            // stripMenuClose
             // 
-            this.stripMenuReadClipboard.Name = "stripMenuReadClipboard";
-            this.stripMenuReadClipboard.Size = new System.Drawing.Size(184, 22);
-            this.stripMenuReadClipboard.Text = "readClipboard";
-            this.stripMenuReadClipboard.Click += new System.EventHandler(this.stripMenuReadClipboard_Click);
+            this.stripMenuClose.Name = "stripMenuClose";
+            this.stripMenuClose.Size = new System.Drawing.Size(156, 22);
+            this.stripMenuClose.Text = "Close";
+            this.stripMenuClose.Click += new System.EventHandler(this.stripMenuReadClipboard_Click);
             // 
-            // stripMenuPaste
+            // stripMenuClear
             // 
-            this.stripMenuPaste.Name = "stripMenuPaste";
-            this.stripMenuPaste.Size = new System.Drawing.Size(184, 22);
-            this.stripMenuPaste.Text = "Paste from clipboard";
-            this.stripMenuPaste.Click += new System.EventHandler(this.stripMenuPaste_Click);
-            // 
-            // btnSetItems
-            // 
-            this.btnSetItems.Location = new System.Drawing.Point(317, 91);
-            this.btnSetItems.Name = "btnSetItems";
-            this.btnSetItems.Size = new System.Drawing.Size(115, 23);
-            this.btnSetItems.TabIndex = 6;
-            this.btnSetItems.Text = "Set copied items";
-            this.btnSetItems.UseVisualStyleBackColor = true;
-            this.btnSetItems.Click += new System.EventHandler(this.btnSetItems_Click);
-            // 
-            // btnGet
-            // 
-            this.btnGet.Location = new System.Drawing.Point(317, 55);
-            this.btnGet.Name = "btnGet";
-            this.btnGet.Size = new System.Drawing.Size(115, 23);
-            this.btnGet.TabIndex = 7;
-            this.btnGet.Text = "Get copied items ";
-            this.btnGet.UseVisualStyleBackColor = true;
-            this.btnGet.Click += new System.EventHandler(this.btnGet_Click);
+            this.stripMenuClear.Name = "stripMenuClear";
+            this.stripMenuClear.Size = new System.Drawing.Size(156, 22);
+            this.stripMenuClear.Text = "Clear Clipboard";
+            this.stripMenuClear.Click += new System.EventHandler(this.stripMenuPaste_Click);
             // 
             // lbItems
             // 
             this.lbItems.FormattingEnabled = true;
-            this.lbItems.Location = new System.Drawing.Point(9, 55);
+            this.lbItems.Location = new System.Drawing.Point(9, 48);
             this.lbItems.Name = "lbItems";
             this.lbItems.Size = new System.Drawing.Size(148, 368);
             this.lbItems.TabIndex = 8;
             // 
-            // btnReset
-            // 
-            this.btnReset.Location = new System.Drawing.Point(317, 154);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(115, 23);
-            this.btnReset.TabIndex = 9;
-            this.btnReset.Text = "Clear";
-            this.btnReset.UseVisualStyleBackColor = true;
-            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
             // lbStrngs
             // 
             this.lbStrngs.FormattingEnabled = true;
-            this.lbStrngs.Location = new System.Drawing.Point(163, 55);
+            this.lbStrngs.Location = new System.Drawing.Point(163, 48);
             this.lbStrngs.Name = "lbStrngs";
             this.lbStrngs.Size = new System.Drawing.Size(148, 368);
             this.lbStrngs.TabIndex = 10;
@@ -198,9 +166,9 @@
             this.lblItems.AutoSize = true;
             this.lblItems.Location = new System.Drawing.Point(6, 32);
             this.lblItems.Name = "lblItems";
-            this.lblItems.Size = new System.Drawing.Size(68, 13);
+            this.lblItems.Size = new System.Drawing.Size(98, 13);
             this.lblItems.TabIndex = 11;
-            this.lblItems.Text = "Copied Items";
+            this.lblItems.Text = "Copied Files/Folder";
             // 
             // lblStrings
             // 
@@ -210,16 +178,6 @@
             this.lblStrings.Size = new System.Drawing.Size(64, 13);
             this.lblStrings.TabIndex = 12;
             this.lblStrings.Text = "Copied Text";
-            // 
-            // btnSetText
-            // 
-            this.btnSetText.Location = new System.Drawing.Point(317, 120);
-            this.btnSetText.Name = "btnSetText";
-            this.btnSetText.Size = new System.Drawing.Size(115, 23);
-            this.btnSetText.TabIndex = 13;
-            this.btnSetText.Text = "Set copied text\r\n";
-            this.btnSetText.UseVisualStyleBackColor = true;
-            this.btnSetText.Click += new System.EventHandler(this.btnSetText_Click);
             // 
             // checkBoxText
             // 
@@ -249,7 +207,7 @@
             // 
             this.groupBox1.Controls.Add(this.checkBoxText);
             this.groupBox1.Controls.Add(this.checkBoxItems);
-            this.groupBox1.Location = new System.Drawing.Point(317, 200);
+            this.groupBox1.Location = new System.Drawing.Point(324, 167);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(115, 67);
             this.groupBox1.TabIndex = 17;
@@ -259,25 +217,15 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(314, 283);
+            this.label1.Location = new System.Drawing.Point(445, 177);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(125, 13);
             this.label1.TabIndex = 18;
             this.label1.Text = "No. of elements in history";
             // 
-            // Apply
-            // 
-            this.Apply.Location = new System.Drawing.Point(316, 354);
-            this.Apply.Name = "Apply";
-            this.Apply.Size = new System.Drawing.Size(75, 23);
-            this.Apply.TabIndex = 20;
-            this.Apply.Text = "Apply";
-            this.Apply.UseVisualStyleBackColor = true;
-            this.Apply.Click += new System.EventHandler(this.button1_Click);
-            // 
             // nudStoredItems
             // 
-            this.nudStoredItems.Location = new System.Drawing.Point(316, 302);
+            this.nudStoredItems.Location = new System.Drawing.Point(448, 193);
             this.nudStoredItems.Name = "nudStoredItems";
             this.nudStoredItems.Size = new System.Drawing.Size(116, 20);
             this.nudStoredItems.TabIndex = 21;
@@ -294,9 +242,9 @@
             this.groupBox2.Controls.Add(this.rbPositionBotomLeft);
             this.groupBox2.Controls.Add(this.rbPositionTopRight);
             this.groupBox2.Controls.Add(this.rbPositionTopLeft);
-            this.groupBox2.Location = new System.Drawing.Point(438, 55);
+            this.groupBox2.Location = new System.Drawing.Point(324, 48);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 113);
+            this.groupBox2.Size = new System.Drawing.Size(240, 113);
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "ChosePosition of ControlPanel";
@@ -304,10 +252,12 @@
             // rbPositionBotomRight
             // 
             this.rbPositionBotomRight.AutoSize = true;
+            this.rbPositionBotomRight.Checked = true;
             this.rbPositionBotomRight.Location = new System.Drawing.Point(6, 88);
             this.rbPositionBotomRight.Name = "rbPositionBotomRight";
             this.rbPositionBotomRight.Size = new System.Drawing.Size(117, 17);
             this.rbPositionBotomRight.TabIndex = 3;
+            this.rbPositionBotomRight.TabStop = true;
             this.rbPositionBotomRight.Text = "Botom Right Corner";
             this.rbPositionBotomRight.UseVisualStyleBackColor = true;
             this.rbPositionBotomRight.CheckedChanged += new System.EventHandler(this.rbPositionBotomRight_CheckedChanged);
@@ -324,12 +274,10 @@
             // 
             // rbPositionTopRight
             // 
-            this.rbPositionTopRight.Checked = true;
             this.rbPositionTopRight.Location = new System.Drawing.Point(7, 43);
             this.rbPositionTopRight.Name = "rbPositionTopRight";
             this.rbPositionTopRight.Size = new System.Drawing.Size(85, 17);
             this.rbPositionTopRight.TabIndex = 1;
-            this.rbPositionTopRight.TabStop = true;
             this.rbPositionTopRight.Text = "Top Right Corner";
             this.rbPositionTopRight.UseVisualStyleBackColor = true;
             this.rbPositionTopRight.CheckedChanged += new System.EventHandler(this.rbPositionTopRight_CheckedChanged);
@@ -350,9 +298,9 @@
             this.groupBox3.Controls.Add(this.groupBox4);
             this.groupBox3.Controls.Add(this.rbSortByCategory);
             this.groupBox3.Controls.Add(this.rbSortByTime);
-            this.groupBox3.Location = new System.Drawing.Point(445, 200);
+            this.groupBox3.Location = new System.Drawing.Point(324, 247);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(246, 195);
+            this.groupBox3.Size = new System.Drawing.Size(246, 135);
             this.groupBox3.TabIndex = 23;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Sort Items";
@@ -363,10 +311,10 @@
             this.groupBox4.Controls.Add(this.rbSortTextFirst);
             this.groupBox4.Location = new System.Drawing.Point(23, 66);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(217, 82);
+            this.groupBox4.Size = new System.Drawing.Size(217, 56);
             this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "groupBox4";
+            this.groupBox4.Text = "Category Sort:";
             // 
             // rbSortFilesAndFoldersFirst
             // 
@@ -415,27 +363,43 @@
             this.rbSortByTime.Text = "By time";
             this.rbSortByTime.UseVisualStyleBackColor = true;
             // 
+            // checkBoxRememberOnClose
+            // 
+            this.checkBoxRememberOnClose.AutoSize = true;
+            this.checkBoxRememberOnClose.Location = new System.Drawing.Point(448, 219);
+            this.checkBoxRememberOnClose.Name = "checkBoxRememberOnClose";
+            this.checkBoxRememberOnClose.Size = new System.Drawing.Size(112, 17);
+            this.checkBoxRememberOnClose.TabIndex = 24;
+            this.checkBoxRememberOnClose.Text = "Remember History";
+            this.checkBoxRememberOnClose.UseVisualStyleBackColor = true;
+            // 
+            // btnClear
+            // 
+            this.btnClear.Location = new System.Drawing.Point(324, 393);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(236, 23);
+            this.btnClear.TabIndex = 25;
+            this.btnClear.Text = "Clear All History";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
             // Form1
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(710, 435);
-            this.ContextMenuStrip = this.contextMenuStrip1;
+            this.ClientSize = new System.Drawing.Size(572, 420);
+            this.Controls.Add(this.btnClear);
+            this.Controls.Add(this.checkBoxRememberOnClose);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.nudStoredItems);
-            this.Controls.Add(this.Apply);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.btnSetText);
             this.Controls.Add(this.lblStrings);
             this.Controls.Add(this.lblItems);
             this.Controls.Add(this.lbStrngs);
-            this.Controls.Add(this.btnReset);
             this.Controls.Add(this.lbItems);
-            this.Controls.Add(this.btnGet);
-            this.Controls.Add(this.btnSetItems);
             this.Controls.Add(this.menuStrip1);
             this.Location = new System.Drawing.Point(1000, 1000);
             this.MainMenuStrip = this.menuStrip1;
@@ -471,21 +435,16 @@
         public System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem stripMenuTitleToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem stripMenuReadClipboard;
-        private System.Windows.Forms.ToolStripMenuItem stripMenuPaste;
-        private System.Windows.Forms.Button btnSetItems;
-        private System.Windows.Forms.Button btnGet;
+        private System.Windows.Forms.ToolStripMenuItem stripMenuClose;
+        private System.Windows.Forms.ToolStripMenuItem stripMenuClear;
         private System.Windows.Forms.ListBox lbItems;
-        private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.ListBox lbStrngs;
         private System.Windows.Forms.Label lblItems;
         private System.Windows.Forms.Label lblStrings;
-        private System.Windows.Forms.Button btnSetText;
         private System.Windows.Forms.CheckBox checkBoxText;
         private System.Windows.Forms.CheckBox checkBoxItems;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button Apply;
         private System.Windows.Forms.NumericUpDown nudStoredItems;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton rbPositionBotomRight;
@@ -498,6 +457,8 @@
         private System.Windows.Forms.RadioButton rbSortTextFirst;
         private System.Windows.Forms.RadioButton rbSortByCategory;
         private System.Windows.Forms.RadioButton rbSortByTime;
+        private System.Windows.Forms.CheckBox checkBoxRememberOnClose;
+        private System.Windows.Forms.Button btnClear;
     }
 }
 
