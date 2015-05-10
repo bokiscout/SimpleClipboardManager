@@ -15,6 +15,7 @@ namespace VP_Proekt_ClipboardManager
 {
     public partial class Form1 : Form
     {   
+        // [Serializable]
         public List<Object> allitems = new List<Object>();      // declare and initialize list of "Object", each item is something copied in clipboard but stored as "Object"... weill need casting for later use
         public int noOfItems;                                   // variable to store maximum number of itemst to be stored
         int width;                                              // width of the screen, used to determinate proper position of the form
@@ -65,10 +66,35 @@ namespace VP_Proekt_ClipboardManager
 
             if (checkBoxRememberOnClose.Checked == true)
             {
-                return;
-                // <replace "return" with code to regenerate allitems[]>
-                // <probably first need to be serialized or whatever but stored on HDD>
+                try
+                {
+                    fillHistory();
+                }
+                catch (FileLoadException)
+                {
+                    return;                         // will have empty list
+                }
             }
+        }
+
+        private void fillHistory()
+        {
+            string line;
+            System.IO.StreamReader reader;
+            reader = new System.IO.StreamReader(@"C:\Users\Public\clipboard\history.txt");
+
+            line = reader.ReadLine();
+            while (line != null)
+            {
+                if (line != "0")
+                {
+                    allitems.Add(line);
+                }
+                line = reader.ReadLine();
+            }
+
+            reader.Close();
+            generateContextMenu();
         }
 
         private void fillForm()
@@ -204,17 +230,20 @@ namespace VP_Proekt_ClipboardManager
             this.WindowState = FormWindowState.Minimized;
         }
 
-        private void stripMenuReadClipboard_Click(object sender, EventArgs e)                // probably old code... should be removed
+        private void stripMenuReadClipboard_Click(object sender, EventArgs e)                // metdod to close app from stripMenu
         {
+            closeApp = true;
+            this.Close(); 
         }
 
-        private void stripMenuPaste_Click(object sender, EventArgs e)                    // old code... used onlky for debuging 
+        private void stripMenuPaste_Click(object sender, EventArgs e)                    // clear history
         {
-            IDataObject idata = Clipboard.GetDataObject();
-            //textBox2.Text = (String)idata.GetData(DataFormats.Text);
-            //if (Clipboard.ContainsAudio())
-            //    textBox2.Text = (string)Clipboard.GetData(DataFormats.WaveAudio);
-            //str = idata.GetFormats();
+            for (int i = 0; i < allitems.Count;)                                    // notice that "i" is not incrementig
+            {
+                allitems.RemoveAt(0);
+            }
+
+            generateContextMenu();
         }
 
         //Setira item na Clipboard
@@ -395,7 +424,7 @@ namespace VP_Proekt_ClipboardManager
             }
         }
 
-        private void SortAllItemsFilesAndFoldersFirst() // *******************
+        private void SortAllItemsFilesAndFoldersFirst() //
         {
             List<object> newlist = new List<object>();      // generate empty list
             for (int i = 0; i < allitems.Count; i++)
@@ -534,11 +563,34 @@ namespace VP_Proekt_ClipboardManager
             {
                 RemoveClipboardFormatListener(this.Handle);
                 mySerialization();
+                if (checkBoxRememberOnClose.Checked == true)
+                {
+                    historySerialization();
+                }
                 return;
                
             }
             e.Cancel = true;
             Hide();
+        }
+
+        private void historySerialization()
+        {
+           int size = allitems.Count;
+           string[] tmp = new string[size];
+            for (int i = 0; i < allitems.Count; i++)
+            {
+                if (!(allitems[i] is StringCollection))
+                {
+                    tmp[i] = allitems[i].ToString();
+                }
+                else
+                {
+                    tmp[i] = "0";
+                }
+            }
+
+            System.IO.File.WriteAllLines(@"C:\Users\Public\clipboard\history.txt", tmp);
         }
 
         private void mySerialization()
@@ -801,6 +853,20 @@ namespace VP_Proekt_ClipboardManager
         private void rbPositionBotomRight_CheckedChanged(object sender, EventArgs e)
         {
             this.SetPosition();
+        }
+
+        private void notifyTryIcon_MouseClick(object sender, MouseEventArgs e)              // use left click to show context menu isntead of right click
+        {
+           // Point mouseLocation = Cursor.Position;
+            // contextMenuStrip1.Show(mouseLocation);
+            // otifyTryIcon.MouseClick += MouseButtons.Right;
+           // ContextMenuStrip.Show(notifyTryIcon.ContextMenuStrip, 10, 12);
+            // notifyTryIcon_MouseDoubleClick(null, null);
+            MouseButtons button = MouseButtons.Right;
+
+            if (e.Button == MouseButtons.Left){
+                // this.notifyTryIcon.ContextMenuStrip.Show();
+            }
         }
 
 
