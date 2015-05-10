@@ -64,6 +64,7 @@
             this.rbSortTextFirst = new System.Windows.Forms.RadioButton();
             this.rbSortByCategory = new System.Windows.Forms.RadioButton();
             this.rbSortByTime = new System.Windows.Forms.RadioButton();
+            this.checkBoxRememberOnClose = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -120,7 +121,7 @@
             this.stripMenuTitleToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(710, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(572, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -149,7 +150,7 @@
             // 
             // btnSetItems
             // 
-            this.btnSetItems.Location = new System.Drawing.Point(317, 91);
+            this.btnSetItems.Location = new System.Drawing.Point(317, 390);
             this.btnSetItems.Name = "btnSetItems";
             this.btnSetItems.Size = new System.Drawing.Size(115, 23);
             this.btnSetItems.TabIndex = 6;
@@ -159,7 +160,7 @@
             // 
             // btnGet
             // 
-            this.btnGet.Location = new System.Drawing.Point(317, 55);
+            this.btnGet.Location = new System.Drawing.Point(196, 390);
             this.btnGet.Name = "btnGet";
             this.btnGet.Size = new System.Drawing.Size(115, 23);
             this.btnGet.TabIndex = 7;
@@ -172,14 +173,14 @@
             this.lbItems.FormattingEnabled = true;
             this.lbItems.Location = new System.Drawing.Point(9, 55);
             this.lbItems.Name = "lbItems";
-            this.lbItems.Size = new System.Drawing.Size(148, 368);
+            this.lbItems.Size = new System.Drawing.Size(148, 329);
             this.lbItems.TabIndex = 8;
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(317, 154);
+            this.btnReset.Location = new System.Drawing.Point(109, 390);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(115, 23);
+            this.btnReset.Size = new System.Drawing.Size(81, 23);
             this.btnReset.TabIndex = 9;
             this.btnReset.Text = "Clear";
             this.btnReset.UseVisualStyleBackColor = true;
@@ -190,7 +191,7 @@
             this.lbStrngs.FormattingEnabled = true;
             this.lbStrngs.Location = new System.Drawing.Point(163, 55);
             this.lbStrngs.Name = "lbStrngs";
-            this.lbStrngs.Size = new System.Drawing.Size(148, 368);
+            this.lbStrngs.Size = new System.Drawing.Size(148, 329);
             this.lbStrngs.TabIndex = 10;
             // 
             // lblItems
@@ -213,9 +214,9 @@
             // 
             // btnSetText
             // 
-            this.btnSetText.Location = new System.Drawing.Point(317, 120);
+            this.btnSetText.Location = new System.Drawing.Point(22, 390);
             this.btnSetText.Name = "btnSetText";
-            this.btnSetText.Size = new System.Drawing.Size(115, 23);
+            this.btnSetText.Size = new System.Drawing.Size(81, 23);
             this.btnSetText.TabIndex = 13;
             this.btnSetText.Text = "Set copied text\r\n";
             this.btnSetText.UseVisualStyleBackColor = true;
@@ -249,7 +250,7 @@
             // 
             this.groupBox1.Controls.Add(this.checkBoxText);
             this.groupBox1.Controls.Add(this.checkBoxItems);
-            this.groupBox1.Location = new System.Drawing.Point(317, 200);
+            this.groupBox1.Location = new System.Drawing.Point(324, 174);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(115, 67);
             this.groupBox1.TabIndex = 17;
@@ -259,7 +260,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(314, 283);
+            this.label1.Location = new System.Drawing.Point(445, 174);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(125, 13);
             this.label1.TabIndex = 18;
@@ -267,7 +268,7 @@
             // 
             // Apply
             // 
-            this.Apply.Location = new System.Drawing.Point(316, 354);
+            this.Apply.Location = new System.Drawing.Point(438, 390);
             this.Apply.Name = "Apply";
             this.Apply.Size = new System.Drawing.Size(75, 23);
             this.Apply.TabIndex = 20;
@@ -277,7 +278,7 @@
             // 
             // nudStoredItems
             // 
-            this.nudStoredItems.Location = new System.Drawing.Point(316, 302);
+            this.nudStoredItems.Location = new System.Drawing.Point(448, 193);
             this.nudStoredItems.Name = "nudStoredItems";
             this.nudStoredItems.Size = new System.Drawing.Size(116, 20);
             this.nudStoredItems.TabIndex = 21;
@@ -294,9 +295,9 @@
             this.groupBox2.Controls.Add(this.rbPositionBotomLeft);
             this.groupBox2.Controls.Add(this.rbPositionTopRight);
             this.groupBox2.Controls.Add(this.rbPositionTopLeft);
-            this.groupBox2.Location = new System.Drawing.Point(438, 55);
+            this.groupBox2.Location = new System.Drawing.Point(324, 55);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 113);
+            this.groupBox2.Size = new System.Drawing.Size(240, 113);
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "ChosePosition of ControlPanel";
@@ -304,10 +305,12 @@
             // rbPositionBotomRight
             // 
             this.rbPositionBotomRight.AutoSize = true;
+            this.rbPositionBotomRight.Checked = true;
             this.rbPositionBotomRight.Location = new System.Drawing.Point(6, 88);
             this.rbPositionBotomRight.Name = "rbPositionBotomRight";
             this.rbPositionBotomRight.Size = new System.Drawing.Size(117, 17);
             this.rbPositionBotomRight.TabIndex = 3;
+            this.rbPositionBotomRight.TabStop = true;
             this.rbPositionBotomRight.Text = "Botom Right Corner";
             this.rbPositionBotomRight.UseVisualStyleBackColor = true;
             this.rbPositionBotomRight.CheckedChanged += new System.EventHandler(this.rbPositionBotomRight_CheckedChanged);
@@ -324,12 +327,10 @@
             // 
             // rbPositionTopRight
             // 
-            this.rbPositionTopRight.Checked = true;
             this.rbPositionTopRight.Location = new System.Drawing.Point(7, 43);
             this.rbPositionTopRight.Name = "rbPositionTopRight";
             this.rbPositionTopRight.Size = new System.Drawing.Size(85, 17);
             this.rbPositionTopRight.TabIndex = 1;
-            this.rbPositionTopRight.TabStop = true;
             this.rbPositionTopRight.Text = "Top Right Corner";
             this.rbPositionTopRight.UseVisualStyleBackColor = true;
             this.rbPositionTopRight.CheckedChanged += new System.EventHandler(this.rbPositionTopRight_CheckedChanged);
@@ -350,9 +351,9 @@
             this.groupBox3.Controls.Add(this.groupBox4);
             this.groupBox3.Controls.Add(this.rbSortByCategory);
             this.groupBox3.Controls.Add(this.rbSortByTime);
-            this.groupBox3.Location = new System.Drawing.Point(445, 200);
+            this.groupBox3.Location = new System.Drawing.Point(324, 247);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(246, 195);
+            this.groupBox3.Size = new System.Drawing.Size(246, 135);
             this.groupBox3.TabIndex = 23;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Sort Items";
@@ -363,10 +364,10 @@
             this.groupBox4.Controls.Add(this.rbSortTextFirst);
             this.groupBox4.Location = new System.Drawing.Point(23, 66);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(217, 82);
+            this.groupBox4.Size = new System.Drawing.Size(217, 56);
             this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "groupBox4";
+            this.groupBox4.Text = "Category Sort:";
             // 
             // rbSortFilesAndFoldersFirst
             // 
@@ -415,13 +416,24 @@
             this.rbSortByTime.Text = "By time";
             this.rbSortByTime.UseVisualStyleBackColor = true;
             // 
+            // checkBoxRememberOnClose
+            // 
+            this.checkBoxRememberOnClose.AutoSize = true;
+            this.checkBoxRememberOnClose.Location = new System.Drawing.Point(448, 224);
+            this.checkBoxRememberOnClose.Name = "checkBoxRememberOnClose";
+            this.checkBoxRememberOnClose.Size = new System.Drawing.Size(112, 17);
+            this.checkBoxRememberOnClose.TabIndex = 24;
+            this.checkBoxRememberOnClose.Text = "Remember History";
+            this.checkBoxRememberOnClose.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(710, 435);
+            this.ClientSize = new System.Drawing.Size(572, 424);
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.checkBoxRememberOnClose);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.nudStoredItems);
@@ -498,6 +510,7 @@
         private System.Windows.Forms.RadioButton rbSortTextFirst;
         private System.Windows.Forms.RadioButton rbSortByCategory;
         private System.Windows.Forms.RadioButton rbSortByTime;
+        private System.Windows.Forms.CheckBox checkBoxRememberOnClose;
     }
 }
 
