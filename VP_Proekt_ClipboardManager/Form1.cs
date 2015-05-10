@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 namespace VP_Proekt_ClipboardManager
+    
 {
     public partial class Form1 : Form
     {   
@@ -21,8 +22,7 @@ namespace VP_Proekt_ClipboardManager
         int width;                                              // width of the screen, used to determinate proper position of the form
         int height;                                             // height of the screen, used to determinate proper position of the form
         bool closeApp;
-        bool firstOpen = false; 
-                                 // variable to store if app should be closed od red X btn click or not
+                                         // variable to store if app should be closed od red X btn click or not
 
         // Here start initialization of fields neceserry for Clipboard Listener
         // <summary>
@@ -50,13 +50,10 @@ namespace VP_Proekt_ClipboardManager
             InitializeComponent();
             AddClipboardFormatListener(this.Handle);                    // ClipBoard Listener
             
-                firstOpen = true;
+                
                 string path = @"C:\Users\Public\clipboard";
-                if (!System.IO.File.Exists(@"C:\Users\Public\clipboard\history.txt") && !System.IO.File.Exists(@"C:\Users\Public\clipboard\lines.txt"))
-                {
-                    System.IO.Directory.CreateDirectory(path);
-                    path = @"C:\Users\Public\clipboard\history.txt";
-                    File.Create(path);
+                if (!System.IO.File.Exists(@"C:\Users\Public\clipboard\lines.txt"))
+                {                    
                     path = @"C:\Users\Public\clipboard\lines.txt";
                     File.Create(path);                    
                 }                
@@ -81,14 +78,8 @@ namespace VP_Proekt_ClipboardManager
             if (checkBoxRememberOnClose.Checked == true)
             {
                 try
-                {
-                    if(!System.IO.File.Exists(@"C:\Users\Public\clipboard\clipboard.bin"))
-                        File.Create(@"C:\Users\Public\clipboard\clipboard.bin");
-                    
-                    else
-                    {
-                        TryGet();
-                    }
+                {                    
+                        TryGet();                    
                   // fillHistory();
                    
                 }
@@ -103,7 +94,7 @@ namespace VP_Proekt_ClipboardManager
         {
             try
             {
-                using (Stream stream = File.Open(@"C:\Users\Public\clipboard\PROBAAA.bin", FileMode.Create))
+                using (Stream stream = File.Open(@"C:\Users\Public\clipboard\clipboard.bin", FileMode.Create))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
                     bin.Serialize(stream, allitems);
@@ -115,7 +106,7 @@ namespace VP_Proekt_ClipboardManager
         {
             try
             {
-                using (Stream stream = File.Open(@"C:\Users\Public\clipboard\PROBAAA.bin", FileMode.Open))
+                using (Stream stream = File.Open(@"C:\Users\Public\clipboard\clipboard.bin", FileMode.Open))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
                     List<Object> pom = (List<Object>)bin.Deserialize(stream);
@@ -129,25 +120,25 @@ namespace VP_Proekt_ClipboardManager
             catch (Exception e) { }
         }
 
-        private void fillHistory()
-        {
-            string line;
-            System.IO.StreamReader reader;
-            reader = new System.IO.StreamReader(@"C:\Users\Public\clipboard\history.txt");
+        //private void fillHistory()
+        //{
+        //    string line;
+        //    System.IO.StreamReader reader;
+        //    reader = new System.IO.StreamReader(@"C:\Users\Public\clipboard\history.txt");
 
-            line = reader.ReadLine();
-            while (line != null)
-            {
-                if (line != "0")
-                {
-                    allitems.Add(line);
-                }
-                line = reader.ReadLine();
-            }
+        //    line = reader.ReadLine();
+        //    while (line != null)
+        //    {
+        //        if (line != "0")
+        //        {
+        //            allitems.Add(line);
+        //        }
+        //        line = reader.ReadLine();
+        //    }
 
-            reader.Close();
-            generateContextMenu();
-        }
+        //    reader.Close();
+        //    generateContextMenu();
+        //}
 
         private void fillForm()
         {
@@ -939,11 +930,15 @@ namespace VP_Proekt_ClipboardManager
             }
             lbItems.Items.Clear();
             lbStrngs.Items.Clear();
-            
-
-                    
-                    
-
+            try
+            {
+                using (Stream stream = File.Open(@"C:\Users\Public\clipboard\clipboard.bin", FileMode.Create))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    bin.Serialize(stream, allitems);
+                }
+            }
+            catch (Exception ex) { }
         }
 
 
