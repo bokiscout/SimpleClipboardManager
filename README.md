@@ -16,11 +16,13 @@ The idea is to mimic well known features found on Linux operating system that ca
   - Dont keep clipboard history for next boot.
 - Autostart on login
 
+#### Requirements:
+This software require at least Microsoft Windows Vista, will work on any newer version.
+This software require 
+
 #### Note:
 Multiple documents copied at once are excluded from clipboard history.
 
 This is not a bug, it is programera choise but can be changed if desired.
 
-#### Requirements:
-This software require at least Microsoft Windows Vista, will work on any newer version.
-This software require 
+This is software is stil in alpha version so I don't garantee that everything will be working out of the box.
