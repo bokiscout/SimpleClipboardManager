@@ -25,4 +25,4 @@ Multiple documents copied at once are excluded from clipboard history.
 
 This is not a bug, it is programera choise but can be changed if desired.
 
-This is software is stil in alpha version so I don't garantee that everything will be working out of the box.
+This is software is stil in alpha version so It is not garanteed that everything will be working out of the box as expected.
