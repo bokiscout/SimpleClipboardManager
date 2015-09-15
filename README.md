@@ -11,7 +11,7 @@ Custom settings for:
   - store only text
   - store only documents (directories, images...)
   - store both images and documents
-- Remember clipboard history for bex boot
+- Remember clipboard history for next boot
   - Keep clipboard history for next boot
   - Dont keep clipboard history for next boot.
 - Autostart on login
