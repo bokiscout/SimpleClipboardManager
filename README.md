@@ -5,7 +5,7 @@ Simple Clipboard Manger for Microsoft Windows
 The idea is to mimic well known features found on Linux operating system that can store recent copied items in a easy accessible list in system try.
 
 #### What curent version can offer:
-- Custom settings for:
+Custom settings for:
 - Number of items to be stored (remembered)
 - Which type of data to be stored
   - store only text
