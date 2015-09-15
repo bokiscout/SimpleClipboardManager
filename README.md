@@ -18,6 +18,7 @@ The idea is to mimic well known features found on Linux operating system that ca
 
 #### Note:
 Multiple documents copied at once are excluded from clipboard history.
+
 This is not a bug, it is programera choise but can be changed if desired.
 
 #### Requirements:
