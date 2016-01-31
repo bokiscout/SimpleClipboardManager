@@ -37,8 +37,8 @@
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.stripMenuTitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stripMenuClose = new System.Windows.Forms.ToolStripMenuItem();
             this.stripMenuClear = new System.Windows.Forms.ToolStripMenuItem();
+            this.stripMenuClose = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSetItems = new System.Windows.Forms.Button();
             this.btnGet = new System.Windows.Forms.Button();
             this.lbItems = new System.Windows.Forms.ListBox();
@@ -87,32 +87,32 @@
             // 
             this.contextMenuStrip1.AllowDrop = true;
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showToolStripMenuItem,
+            this.closeToolStripMenuItem,
             this.hideToolStripMenuItem,
-            this.closeToolStripMenuItem});
+            this.showToolStripMenuItem});
             this.contextMenuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(104, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 92);
             this.contextMenuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip1_ItemClicked);
             // 
             // showToolStripMenuItem
             // 
             this.showToolStripMenuItem.Name = "showToolStripMenuItem";
-            this.showToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.showToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.showToolStripMenuItem.Text = "Show";
             this.showToolStripMenuItem.Click += new System.EventHandler(this.showToolStripMenuItem_Click);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.hideToolStripMenuItem.Text = "Hide";
             this.hideToolStripMenuItem.Click += new System.EventHandler(this.hideToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -129,25 +129,25 @@
             // stripMenuTitleToolStripMenuItem
             // 
             this.stripMenuTitleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.stripMenuClose,
-            this.stripMenuClear});
+            this.stripMenuClear,
+            this.stripMenuClose});
             this.stripMenuTitleToolStripMenuItem.Name = "stripMenuTitleToolStripMenuItem";
             this.stripMenuTitleToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.stripMenuTitleToolStripMenuItem.Text = "File";
-            // 
-            // stripMenuClose
-            // 
-            this.stripMenuClose.Name = "stripMenuClose";
-            this.stripMenuClose.Size = new System.Drawing.Size(184, 22);
-            this.stripMenuClose.Text = "Close";
-            this.stripMenuClose.Click += new System.EventHandler(this.stripMenuReadClipboard_Click);
             // 
             // stripMenuClear
             // 
             this.stripMenuClear.Name = "stripMenuClear";
             this.stripMenuClear.Size = new System.Drawing.Size(156, 22);
             this.stripMenuClear.Text = "Clear Clipboard";
-            this.stripMenuClear.Click += new System.EventHandler(this.stripMenuPaste_Click);
+            this.stripMenuClear.Click += new System.EventHandler(this.stripMenuClear_Click);
+            // 
+            // stripMenuClose
+            // 
+            this.stripMenuClose.Name = "stripMenuClose";
+            this.stripMenuClose.Size = new System.Drawing.Size(156, 22);
+            this.stripMenuClose.Text = "Close";
+            this.stripMenuClose.Click += new System.EventHandler(this.stripMenuClose_Click);
             // 
             // btnSetItems
             // 
@@ -158,7 +158,6 @@
             this.btnSetItems.Text = "Set copied items";
             this.btnSetItems.UseVisualStyleBackColor = true;
             this.btnSetItems.Visible = false;
-            this.btnSetItems.Click += new System.EventHandler(this.btnSetItems_Click);
             // 
             // btnGet
             // 
@@ -169,7 +168,6 @@
             this.btnGet.Text = "Get copied items ";
             this.btnGet.UseVisualStyleBackColor = true;
             this.btnGet.Visible = false;
-            this.btnGet.Click += new System.EventHandler(this.btnGet_Click);
             // 
             // lbItems
             // 
@@ -188,7 +186,6 @@
             this.btnReset.Text = "Clear";
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Visible = false;
-            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // lbStrngs
             // 
@@ -225,7 +222,6 @@
             this.btnSetText.Text = "Set copied text\r\n";
             this.btnSetText.UseVisualStyleBackColor = true;
             this.btnSetText.Visible = false;
-            this.btnSetText.Click += new System.EventHandler(this.btnSetText_Click);
             // 
             // checkBoxText
             // 
@@ -280,7 +276,6 @@
             this.Apply.Text = "Apply";
             this.Apply.UseVisualStyleBackColor = true;
             this.Apply.Visible = false;
-            this.Apply.Click += new System.EventHandler(this.button1_Click);
             // 
             // nudStoredItems
             // 
@@ -425,6 +420,8 @@
             // checkBoxRememberOnClose
             // 
             this.checkBoxRememberOnClose.AutoSize = true;
+            this.checkBoxRememberOnClose.Checked = true;
+            this.checkBoxRememberOnClose.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRememberOnClose.Location = new System.Drawing.Point(448, 219);
             this.checkBoxRememberOnClose.Name = "checkBoxRememberOnClose";
             this.checkBoxRememberOnClose.Size = new System.Drawing.Size(112, 17);

@@ -16,13 +16,65 @@ namespace VP_Proekt_ClipboardManager
     public partial class Form1 : Form
     {   
         // [Serializable]
-        public List<Object> allitems = new List<Object>();      // declare and initialize list of "Object", each item is something copied in clipboard but stored as "Object"... weill need casting for later use
-        public int noOfItems;                                   // variable to store maximum number of itemst to be stored
-        int width;                                              // width of the screen, used to determinate proper position of the form
-        int height;                                             // height of the screen, used to determinate proper position of the form
-        bool closeApp;                                          // variable to store if app should be closed od red X btn click or not
+        public List<Object> allitems = new List<Object>();          // declare and initialize list of "Object", each item is something copied in clipboard but stored as "Object"... will need casting for later use
+        public int noOfItems { get; set; }                          // variable to store maximum number of itemst to be stored
+        int width { get; set; }                                     // width of the screen in pixels, used to determinate proper position of the form
+        int height { get; set; }                                    // height of the screen in pixels, used to determinate proper position of the form
+        bool closeApp{ get; set;}                                   // variable to store if app should be closed od red X btn click or not (minimized to system tray)
 
-        // Here start initialization of fields neceserry for Clipboard Listener
+        String setap { get; set; }                                  // location where the setup file is located
+        String history { get; set; }                                // location where history is saved
+        String username { get; set; }                               // name of the active user
+        String root { get; set; }                                   // Leter of disk drive where Windows is installed (ex: C, D, E...)
+
+        public Form1()
+        {   
+            InitializeComponent();
+            
+            root = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System));
+            history = root + @"Users\Public\clipboard\history.txt";
+            setap = root + @"Users\Public\clipboard\lines.txt";
+
+            AddClipboardFormatListener(this.Handle);                    // ClipBoard Listener
+            
+            // add some code to deal with initialization of "List<Object> allitemes"
+            //
+            //
+            // code for dealing with initialization of "List<Object> allitemes" ends here
+            noOfItems = (int)nudStoredItems.Value;              // intilize number of items acorting to value in form numeric updown
+            SetPosition();                                      // call methot to initialize width and height values representing screen size
+            closeApp = false;
+
+            try{
+                    fillForm();                                 // try to read config file   // if config file not found, loead form defaults
+                    MessageBox.Show("Form filed from file");
+                }
+           catch (Exception ex)
+                {
+                    MessageBox.Show("Setap not found");
+                }
+
+            if (checkBoxRememberOnClose.Checked == true)
+            {
+                try
+                {
+                    fillHistory();
+                    MessageBox.Show("History found");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("History not found");
+                }
+            }
+        }
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //
+        // Start initialization of fields neceserry for Clipboard Listener
+        
         // <summary>
         // Places the given window in the system-maintained clipboard format listener list.
         // </summary>
@@ -41,51 +93,65 @@ namespace VP_Proekt_ClipboardManager
         // Sent when the contents of the clipboard have changed.
         // </summary
         private const int WM_CLIPBOARDUPDATE = 0x031D;
-        //Here ends initialization of fields neceserry for Clipboard Listener
+        
+        // End initialization of fields neceserry for Clipboard Listener
+        //
+        //
+        ///////////////////////////////////////////////////////////////////////////////////////
 
-        public Form1()
-        {   
-            InitializeComponent();
-            AddClipboardFormatListener(this.Handle);                    // ClipBoard Listener
-            
-            // add some code to deal with initialization of "List<Object> allitemes"
-            //
-            //
-            // code for dealing with initialization of "List<Object> allitemes" ends here
-            noOfItems = (int)nudStoredItems.Value;              // intilize number of items acorting to value in form numeric updown
-            SetPosition();                                    // call methot to initialize width and height values representing screen size
-            closeApp = false;
 
-            try{
-                    fillForm();                                 // try to read config file   // if config file not found, loead form defaults
-                }
-           catch (FileNotFoundException)
-                {
-                    return;
-                }
 
-            if (checkBoxRememberOnClose.Checked == true)
+
+        // The logic behind the clipboard listener
+        // method to catch clipboard changes
+        // ****     note1: this is recursive method!!!
+        protected override void WndProc(ref Message m)
+        {
+            // note1: you see! this is recursive method!
+            base.WndProc(ref m);
+
+            if (m.Msg == WM_CLIPBOARDUPDATE)
             {
-                try
+                if (Clipboard.ContainsFileDropList() && checkBoxItems.Checked)
                 {
-                    fillHistory();
+                    StringCollection item;
+                    item = Clipboard.GetFileDropList();
+                    if (item.Count == 1)
+                    {
+                        // add to context menu as last item
+                        addToContextMenu(item);                     
+                        // add more code to produce specific behaviour for adding files (documents)
+                        // should be implemented ****    ****    ****
+                    }
                 }
-                catch (FileLoadException)
+                // if 'else' is reached then current clipboard item is string for shure
+                else
                 {
-                    return;                         // will have empty list
+                    if (Clipboard.ContainsText() && checkBoxText.Checked)
+                    {
+                        string name = Clipboard.GetText();
+                        addToContextMenu(name);
+                        // *****    ****    **** 
+                        // add more code here to produce specific behaviour for adding strings in clipboard,
+                        // adding in context menu and deleteing duplicates   
+                    }
                 }
             }
         }
 
+
+        // note1: this method might trow Exception if file is missing
+        // note2: the exception is handled on formLoad
         private void fillHistory()
         {
             string line;
-            System.IO.StreamReader reader;
-            reader = new System.IO.StreamReader(@"C:\Users\Public\clipboard\history.txt");
+            System.IO.StreamReader reader = new System.IO.StreamReader(history);
 
             line = reader.ReadLine();
             while (line != null)
             {
+                // 0 = file or folder had to be serialized but it was not
+                // note3: go to "HistorySerialization()" to see the implementation
                 if (line != "0")
                 {
                     allitems.Add(line);
@@ -97,16 +163,22 @@ namespace VP_Proekt_ClipboardManager
             generateContextMenu();
         }
 
+
+        // note1: this method might trow Exception if file is missing
+        // note2: the exception is handled on formLoad
         private void fillForm()
         {
-            string line;
-            System.IO.StreamReader reader;
-            reader = new System.IO.StreamReader(@"C:\Users\Public\clipboard\lines.txt");
+            String line;
+            System.IO.StreamReader reader = new System.IO.StreamReader(setap);
 
             for (int i = 0; i < 12; i++)
             {
-                line = reader.ReadLine();           // if I read empty line, then no config is stored, load default
+                line = reader.ReadLine();
 
+                // 0 < i < 11
+                // each case for i test some property
+                // ex: i=0 test if form should be in top left corner,
+                // ex: i=1 test if form should be in top right corner...
                 switch (i)
                 {
                     case 0:
@@ -222,23 +294,29 @@ namespace VP_Proekt_ClipboardManager
                             checkBoxRememberOnClose.Checked = false;
                         }
                         break;
-
                 }
-                  
             }
-            reader.Close();     // close the stream
+            reader.Close();
+            // if this code is reached, config file was present
+            // that equals program has been running in the past
+            // so we put it in systemtray
             this.WindowState = FormWindowState.Minimized;
         }
 
-        private void stripMenuReadClipboard_Click(object sender, EventArgs e)                // metdod to close app from stripMenu
+        // method to close app from strip menu (top meny)
+        private void stripMenuClose_Click(object sender, EventArgs e)
         {
             closeApp = true;
-            this.Close(); 
+            this.Close();
         }
 
-        private void stripMenuPaste_Click(object sender, EventArgs e)                    // clear history
+
+        // method to clear history from strip menu (top meny)
+        private void stripMenuClear_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < allitems.Count;)                                    // notice that "i" is not incrementig
+            // note1: "i" is not incrementig
+            // we are removing item at position 0 until there are no more items
+            for (int i = 0; i < allitems.Count;)
             {
                 allitems.RemoveAt(0);
             }
@@ -246,169 +324,117 @@ namespace VP_Proekt_ClipboardManager
             generateContextMenu();
         }
 
-        //Setira item na Clipboard
-        private void btnSetItems_Click(object sender, EventArgs e)                                   // old code... used for debuging
-        {
-            if (lbItems.SelectedIndex != -1)
-            {
-                int tmp = lbItems.SelectedIndex;
-                //Clipboard.SetFileDropList(list[tmp]);
-            }
-        }
 
-        private void Form1_Resize(object sender, EventArgs e)                                        // method to hide icon from task bar
-        {
-            if (FormWindowState.Minimized == WindowState)
-                Hide();
-        }
-
-        private void notifyTryIcon_MouseDoubleClick(object sender, MouseEventArgs e)                 // restore hiden form (hiden = palced in system try)
+        // tray icon doubleclick
+        // show (restore) form if it is hiden
+        private void notifyTryIcon_MouseDoubleClick(object sender, MouseEventArgs e)                 
         {
             this.SetPosition();
             Show();
             WindowState = FormWindowState.Normal;
-           // this.SetPosition();
         }
 
-        // old code, used only for debuging
-        private void btnGet_Click(object sender, EventArgs e) //Gi zima site item - i / stringovi kopirani do sega
-        {
-            /*
-            lbItems.Items.Clear();//go prebrisuva list box - ot da ne se dupliraat kopiranite item - i na get
-            lbStrngs.Items.Clear();// -||-
-            string[] s = new string[list.Count];
-            string ch;
-            string tmp;
-            int index;
-            try
-            {
-                for (int i = 0; i < list.Count; i++)
-                {
-                    list[i].CopyTo(s, 0);//go kopira vo s(string)
-                    ch = s[0].ToString();//go smestuva vo string (nez zosto go staviv ova tocno)
-                    index = ch.LastIndexOf("\\");//go zima indexot na posednoto "/" pa nataka
-                    tmp = ch.Substring(index);//go pravi kako substring
-                    lbItems.Items.Add(tmp);//go dodava vo listbox
 
-                }
-                for (int i = 0; i < copiedText.Count; i++)
-                {
-                    lbStrngs.Items.Add(copiedText[i]);//dodava samo stringovi vo listbox
-                }
-            }
-                //exception - ov e zatoa sto paga ako kopiras poveke item - i
-            catch (Exception ex)
-            {
-                MessageBox.Show("You have copied two items at once", "Warning", MessageBoxButtons.OK);
-                // da definirame kade pagja programata spored parametrite
-                // dali element e null ili nesto treto...
-                // koga ke znaeme vo kakva sostojba e sekoja promeliva bi mozele
-                // da kreirame metod koj ke dodava dva elementi namsto eden
-                // vo momentov na edno pole vo "list" imame dva elementi od clipboard (pretpostavuvam)
-                // najverojatno toa e problemot
-            }
-             */
-            lbItems.Items.Clear();
-            lbStrngs.Items.Clear();
-            /*
-             for (int i = 3; i < contextMenuStrip1.Items.Count; i++)  // clear context menu items
-             {
-                 contextMenuStrip1.Items.RemoveAt(i);
-             }
-             */
-            for (int i = 0; i < allitems.Count(); i++)
-            {
-                //if(allitems[i].GetType == StringCollection)
-                // >> lbStrngs.Items.Add(allitems[i]); >>
-                if (allitems[i] is StringCollection)
-                {
-                    StringCollection sc = allitems[i] as StringCollection;
-                    string s = sc[0].ToString();
-                    int index = s.LastIndexOf("\\");//go zima indexot na posednoto "/" pa nataka
-                    string name = s.Substring(index + 1);//go pravi kako substring
-
-                    lbItems.Items.Add(name);
-                    // contextMenuStrip1.Items.Add(name);
-
-                    // **** pomogni mi tuka da go zemam strinot od lokacijata na elementot
-                }
-                else
-                {
-                    string name = allitems[i].ToString();
-                    lbStrngs.Items.Add(name);
-                    // contextMenuStrip1.Items.Add(name);
-                }
-            }
-        }
-
-        //gi brise dvete listiboxo - vi
-        private void btnReset_Click(object sender, EventArgs e)     // old code... used only for debuging
-        {
-            lbItems.Items.Clear();
-            lbStrngs.Items.Clear();
-        }
-
-        //Pocnuva logikata na clipboard listener
-        protected override void WndProc(ref Message m)               // ClipBoard listener start here
-                                                                      // method to catch clipboard changes
-        {
-            base.WndProc(ref m);
-
-            if (m.Msg == WM_CLIPBOARDUPDATE)
-            {
-                if (Clipboard.ContainsFileDropList() && checkBoxItems.Checked)
-                {
-                    StringCollection item;
-                    item = Clipboard.GetFileDropList();
-                    if (item.Count == 1)
-                    {
-                        addToContextMenu(item);                     // add to context menu as last item
-                                                                     // add more code to produce specific behaviour for adding files (documents)
-                    }
-                }
-                else                                                   // if this else is reached then current clipboard item must be string
-                {
-                    if (Clipboard.ContainsText() && checkBoxText.Checked)                   // add one more check to prevent unexpected behaviour
-                    {
-                        string name = Clipboard.GetText();
-                        addToContextMenu(name);                     // add current item in cotext menu
-                                                                     // add more code here to produce specific behaviour for adding strings in clipboard, adding in context menu and deleteing duplicates
-                    }
-                }
-            }
-        }
-
-        private void addToContextMenu(string name)  // method to add string in context menu
+        // method to add string in context menu
+        // note1: this method has one more signature accepting 'StringCollection'
+        private void addToContextMenu(string name)  
         {   
             //<generate more specific behaviour>
             // if(checkbox_delete_duplicates)....
             //
             // else...
             // <more specifici behaviour ends here>
-            for (int i = 0; i < allitems.Count; i++)                        // by default we delete duplicates
+            for (int i = 0; i < allitems.Count; i++)
             {
+                // by default we delete duplicates
                 int duplikat = ((String.CompareOrdinal(allitems[i].ToString(), name)));
                 if (duplikat == 0)
                 {
                     allitems.RemoveAt(i);
+                    // probably value of i should be decremented after deleting item
+                    // otherwise some elements might be skipped
+                    // or might not becouse there are no more than one duplicate
+                    // need few tests here
                 }
             } 
-                                                          // if there were any duplicates now they are gone
-           
-            if (allitems.Count > noOfItems)             // if we have maxiumim number of elements, delete odest one and add new one
+            // if there were any duplicates now they are gone
+
+            // if we have maxiumim number of elements, delete oldest one and add new one
+            if (allitems.Count > noOfItems)
             {
-                for (int i = 0; i < allitems.Count - noOfItems+1; i++)
-                allitems.RemoveAt(0);
+                for (int i = 0; i < allitems.Count - noOfItems + 1; i++)
+                {
+                    allitems.RemoveAt(0);
+                }
                 allitems.Add(name);
+                // here might be bug, probably missing brackets, need more testing here
             }
             else
-                allitems.Add(name);                                         // add provided string "name" to list of clipboard items
-
-            sortAllItems();                                             // call method that will eventualy sort items
-            
-            generateContextMenu();                                      // call method to regenerate new context menu containing new item
+            {
+                allitems.Add(name);
+            }
+            sortAllItems();
+            generateContextMenu();
         }
 
+        // method to add 'StringColection' in context menu
+        // note1: this method has one more signature accepting 'String'
+        private void addToContextMenu(StringCollection item)
+        {
+            // by default we remove duplicates
+            // write more code to get more specific begavior
+            //
+            //
+
+            // check for existing files equal to one that should be added
+            for (int i = 0; i < allitems.Count; i++)            
+            {
+                if (allitems[i] is StringCollection)
+                {
+                    // asume that there are no duplicates       
+                    bool duplikat = false;
+
+                    // myStringColection provides overrided CompareTo() method
+                    //
+                    // default compare to can not be used becouse of invalid casting
+                    // parrent (Object) can not be casted to child (StringColection)
+                    // solution is:
+                    // "new class that accept argument of type "StringColection"
+                    // and implementing it's own "Equals()" method"
+                    myStringColection mscItem = new myStringColection(item);
+      
+                    duplikat = mscItem.Equals(allitems[i]);
+                    if (duplikat)
+                    {
+                        // remove i'th items if it is equal to one that needs to be added
+                        // new item will be added last in the list later (probably)         ****    ****    ****
+                        allitems.RemoveAt(i);                               
+                    }
+                }
+            }
+            // if there were duplicates now they are gone
+
+            // proverka za odrzuvanje na nizata na odredenata golemina
+            // if we have maxiumim number of elements, delete oldest one and add new one
+            if (allitems.Count > noOfItems)            
+            {
+                for (int i = 0; i < allitems.Count - noOfItems + 1; i++)
+                {
+                    allitems.RemoveAt(0);
+                }
+                allitems.Add(item);
+            }
+            else
+            {
+                allitems.Add(item);
+            } 
+            sortAllItems();
+            generateContextMenu();
+        }
+
+        
+        // this methot will call other sorting method
+        // it depends on which sorting method is checked on the form
         private void sortAllItems()
         {
             if (rbSortByCategory.Checked == true)
@@ -424,67 +450,95 @@ namespace VP_Proekt_ClipboardManager
             }
         }
 
-        private void SortAllItemsFilesAndFoldersFirst() //
+
+        // sorting method
+        // first files and folders, then strings
+        private void SortAllItemsFilesAndFoldersFirst()
         {
-            List<object> newlist = new List<object>();      // generate empty list
+            // generate empty list
+            List<object> newlist = new List<object>();
+
             for (int i = 0; i < allitems.Count; i++)
             {
                 if (allitems[i] is StringCollection)
                 {
                     newlist.Add(allitems[i]);
                 }
-            }       // all files and folders are added
+            }
+            // all files and folders are added
 
-            for (int i = 0; i < allitems.Count; i++)        // now add text
+            // now add text
+            for (int i = 0; i < allitems.Count; i++)
             {
                 if (!(allitems[i] is StringCollection))
                 {
                     newlist.Add(allitems[i]);
                 }
-            }       // text has been added
+            }
+            // text has been added
 
-            allitems = newlist;     // asign new (temporary) list to old one
+            // asign new (temporary) list to old one
+            // 31.01.2016 : why the hell temporaray? need more investigation, same as in other sorting method
+            allitems = newlist;     
         }
 
-        private void SortAllItemsTextFirst() //******************
+
+        // sorting method
+        // first text, then files and folders
+        private void SortAllItemsTextFirst()
         {
-            List<object> newlist = new List<object>();      // generate empty list
+            List<object> newlist = new List<object>();
+            
+            // add text to the list
             for (int i = 0; i < allitems.Count; i++)
             {
-                if (!(allitems[i] is StringCollection))    // add text to the list
+                if (!(allitems[i] is StringCollection)) 
                 {
                     newlist.Add(allitems[i]);
                 }
-            }       // all text items has been added
+            }
+            // all text items has been added
 
-            for (int i = 0; i < allitems.Count; i++)        // now add Files and Folders
+            // now add Files and Folders
+            for (int i = 0; i < allitems.Count; i++)
             {
                 if (allitems[i] is StringCollection)
                 {
                     newlist.Add(allitems[i]);
                 }
-            }       // Files and Folders has been added
+            }
+            // Files and Folders has been added
 
-            allitems = newlist;     // asign new (temporary) list to old one
+            // asign new (temporary) list to old one
+            // 31.01.2016 : why the hell temporaray? need more investigation, same as in other sorting method
+            allitems = newlist;
         }
 
-        private void generateContextMenu()                                                      // method to generate menu
-        {
-            lbStrngs.Items.Clear();                                                                 // old code... used only for debuging
-            lbItems.Items.Clear();                                                                  // old code... used only for debuging
 
-            for (int i = 3; i < contextMenuStrip1.Items.Count; )                                  // first remove all items      ** notice, variable "i" is not incrementing **
-                                                                                                  // .Counts return smaller integer in every next iteration
+        // method to generate context menu
+        // this is accessable by right click on system try icon
+        private void generateContextMenu()                                                      
+        {
+            lbStrngs.Items.Clear();
+            lbItems.Items.Clear();
+
+            // first remove all items from context menu
+            // note1: variable "i" is not incrementing
+            // note2: '.Count' return smaller integer in every next iteration
+            for (int i = 3; i < contextMenuStrip1.Items.Count; )                                           
             {
                 contextMenuStrip1.Items.RemoveAt(i);
-            }                                                                                       // all items deleteted
+            }
+            // all items deleteted
 
+            // now add items to contextmenu
             for (int i = 0; i < allitems.Count; i++)
             {
                 if (allitems[i] is StringCollection)
                 {
                     StringCollection sc = allitems[i] as StringCollection;
                     if (sc.Count > 1)
+                        // probably bad handling of multiple files          ****        ****        ****
                     {
                         StringBuilder sb = new StringBuilder();
                         for (int j = 0; j < sc.Count; j++)
@@ -501,64 +555,26 @@ namespace VP_Proekt_ClipboardManager
                     else
                     {
                         string s = sc[0].ToString();
-                        int index = s.LastIndexOf("\\");//go zima indexot na posednoto "/" pa nataka
-                        string name = s.Substring(index + 1);//go pravi kako substring
+                        int index = s.LastIndexOf("\\");        //get the indexot na posednoto "/" pa nataka
+                        string name = s.Substring(index + 1);   //make substring kako substring
                         lbItems.Items.Add(name);
                         contextMenuStrip1.Items.Add(name);
                     }
                 }
-
                 else
                 {
                     string name = allitems[i].ToString();
+                    name = name.Substring(0, 15);       // name can be maximum of 15 chars long
                     lbStrngs.Items.Add(name);
                     contextMenuStrip1.Items.Add(name);
                 }
             }
         }
 
-        private void addToContextMenu(StringCollection item)        // method to add StringColection to "[]allitems" and to "context_menu"
+        // method to handle closing of app
+        private void Form1_FormClosing_1(object sender, FormClosingEventArgs e)             
         {
-            // by default we remove duplicates
-            // write more code to get more specific begavior
-            //
-            //
-
-            for (int i = 0; i < allitems.Count; i++)            // let's check for existing files equal to current one that should be added
-            {
-                if (allitems[i] is StringCollection)            // if i'th item in []allitmes is not of type StringColection then it can not be duplicate
-                {
-                    bool duplikat = false;                      // lets asume that there are no duplicates       
-                    myStringColection mscItem = new myStringColection(item);        // myStringColection provides overrided CompareTo() method
-                                                                                    // default compare to can not be used becouse of invalid casting
-                                                                                    // parrent (Object) can not be casted to child (StringColection)
-                                                                                    // solution is:
-                                                                                    // "new class that accept argument of type "StringColection"
-                                                                                    // and implementing it's own "Equals()" method"
-                    duplikat = mscItem.Equals(allitems[i]);
-                    if (duplikat)
-                    {
-                        allitems.RemoveAt(i);                                       // remove i'th items if it is equal to one that needs to be added
-                    }
-                }
-            }                                                                       // if there are duplicates now they are gone
-
-            if (allitems.Count > noOfItems)             //proverka za odrzuvanje na nizata na odredenata golemina
-            {
-                for (int i = 0; i < allitems.Count - noOfItems+1; i++)
-                    allitems.RemoveAt(0);
-                allitems.Add(item);
-            }
-            else
-                allitems.Add(item);                                                    // add current "StringCoelction" to []allitems
-
-            sortAllItems();
-            generateContextMenu();                                                  // regenerate the context menu
-        }
-
-        private void Form1_FormClosing_1(object sender, FormClosingEventArgs e)             // method to handle closing of app
-                                                                                            // prevent closing from red X button, but allow to close from context menu
-        {
+            // prevent closing from red X button placed on window frame, but allow closing from context menu
             if (closeApp == true || e.CloseReason != CloseReason.UserClosing)
             {
                 RemoveClipboardFormatListener(this.Handle);
@@ -574,6 +590,8 @@ namespace VP_Proekt_ClipboardManager
             Hide();
         }
 
+
+        // serialize history as plain text
         private void historySerialization()
         {
            int size = allitems.Count;
@@ -586,15 +604,20 @@ namespace VP_Proekt_ClipboardManager
                 }
                 else
                 {
+                    // 0 = file or folder, we can not serialize them as plain text
                     tmp[i] = "0";
                 }
             }
-
-            System.IO.File.WriteAllLines(@"C:\Users\Public\clipboard\history.txt", tmp);
+            System.IO.File.WriteAllLines(history, tmp);
         }
 
+
+        // serialize form state
+        // ex: state of checkboxes, state of radiobuttons etc...
         private void mySerialization()
         {
+            // ***    ****   ***  why tmp[] is 13 objects here, but on deserialiation it is only 11?
+            // need more investigation
             string[] tmp = new string[13];
 
             bool checktl = rbPositionTopLeft.Checked;
@@ -710,7 +733,7 @@ namespace VP_Proekt_ClipboardManager
                 tmp[11] = "0";
             }
 
-            System.IO.File.WriteAllLines(@"C:\Users\Public\clipboard\lines.txt", tmp);
+            System.IO.File.WriteAllLines(setap, tmp);
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)                // method to close form when clicked "Close" button from context menu
@@ -719,14 +742,6 @@ namespace VP_Proekt_ClipboardManager
             this.Close();                                                                   // call "Form1_FormClosing_1()"
         }
 
-        private void btnSetText_Click(object sender, EventArgs e)           // old code used for debuging
-        {
-            if (lbStrngs.SelectedIndex != -1)
-            {
-
-                Clipboard.SetText(lbStrngs.SelectedItem.ToString());
-            }
-        }
 
         private void showToolStripMenuItem_Click(object sender, EventArgs e)    // show form when "some button is clicked"  *** neds atention to determinate when(which element should be clicked) it is trigered  ****
         {
@@ -782,15 +797,6 @@ namespace VP_Proekt_ClipboardManager
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)      // click aply button
-        {   
-            // let's use numeric up down instead of textbox
-            // noOfItems = Convert.ToInt16(textBoxNoOfCopiesToStore.Text)-1;
-            noOfItems = (int)nudStoredItems.Value;
-            generateContextMenu();
-        }
-
-   
 
         private void SetPosition()          // method to calculate proper position of the form acording to screen size (resolution)
         {
@@ -869,9 +875,13 @@ namespace VP_Proekt_ClipboardManager
             }
         }
 
-
-
-        
+        // this will hide window frame
+        // without this, when we minimize to try, the frame is still shown
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == WindowState)
+                Hide();
+        }
 
     }
 }
